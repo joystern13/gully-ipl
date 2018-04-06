@@ -18,7 +18,7 @@ session_start();
 <!-- Mobile viewport -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<link rel="shortcut icon" href="images/quiz-questions.jpg"  type="image/x-icon">
+
 
 <!-- CSS-->
 <!-- Google web fonts. You can get your own bundle at http://www.google.com/fonts. Don't forget to update the CSS accordingly!-->
@@ -34,16 +34,16 @@ session_start();
 <!-- end JS-->
 
 </head>
-<body>
+<body style="background-image: url('images/ipl-bg1.jpg'); background-size: cover;">
 	<span style="display:block; height: 35px;"></span>
     <section id="card" class="clearfix">
 	<div class="login_image">
-		<img src="images/icon.png" />
+		<img src="images/trophy.png"/>
 	</div>
 	<div class="wrapper">
         <div class="row"> 
             <div class="grid_5">
-				<h1>Login</h1>
+				
 				<?php
 					if(isset($_SESSION['last_page']) && $_SESSION['last_page'] == "validate_entry") {
 						if (isset($_SESSION['invalid_user']) && $_SESSION['invalid_user'] == true) {

@@ -21,7 +21,7 @@
 				//$_SESSION['USERNAME'] = $row['PASSWORD'];
                 $_SESSION['loggedin'] = true;
                 //$_SESSION['userid'] = $row['USERID'];
-                $_SESSION['username'] = $_POST[username];
+                $_SESSION['username'] = $_POST['username'];
                 $_SESSION['invalid_user'] = false;
                 //$_SESSION['profilepic'] = $row['ProfilePic'];
                 if($row['gender']=='MALE')

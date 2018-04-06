@@ -235,7 +235,7 @@
                         </ul>
                      </div>
                      <div class="mdl-card__actions mdl-card--border">
-                        <a href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect">See Full List</a>
+                        <a href="rankings.php" class="mdl-button mdl-js-button mdl-js-ripple-effect">See Full List</a>
                      </div>
                   </div>
                </div>
