@@ -13,7 +13,7 @@
                 }else {
             $sql="SELECT * FROM user_data where lower(USERNAME) = lower('$_POST[username]') AND PASSWORD = '$_POST[password]'";
 			$query = mysqli_query($GLOBALS['con'],$sql);
-			echo $sql;
+			//echo $sql;
 			$row = mysqli_fetch_array($query,MYSQLI_BOTH);
 
 			if(!empty($row['username']) AND !empty($row['password'])) 

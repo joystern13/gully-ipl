@@ -26,7 +26,8 @@
 			} else {
                                 $sql = "insert into user_data (username,password,firstname,lastname,email,gender) values ('$_POST[username]','$_POST[password]','$_POST[firstname]','$_POST[lastname]','$_POST[email]','$_POST[Gender]')";
 				if (mysqli_query($GLOBALS['con'],$sql)) {
-                                    echo "New user registration successful!";
+                                    header ("Location: ../login.php");
+				    				exit();
                                 } else {
                                     echo "Error: " . $sql . "<br>" . $con->error;
                                 } 

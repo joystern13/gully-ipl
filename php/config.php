@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 	define('DB_HOST', 'localhost');
 	define('DB_NAME', 'id5201685_ipldb');
 	define('DB_USER','root');
