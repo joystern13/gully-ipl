@@ -15,7 +15,7 @@
            return $row['FirstName'];
    }
    function getMatchInfo(){
-     $sql = "select a.match_id,t1.team_id t1_id,t1.team_name t1_name,t1.logo_path t1_logo_path,t2.team_id t2_id,t2.team_name t2_name,t2.logo_path t2_logo_path,v.teamid voted_team
+     $sql = "select a.match_id,t1.team_id t1_id,t1.team_name t1_name,t1.logo_path t1_logo_path,t2.team_id t2_id,t2.team_name t2_name,t2.logo_path t2_logo_path,v.teamid voted_team, CASE WHEN convert_tz(now(),@@session.time_zone,'+05:30') > DATE_SUB(match_datetime, INTERVAL 1 HOUR) THEN 0 ELSE 1 END voting_allowed
               from match_master a left join user_vote_master v
               on a.match_id = v.matchid and v.username = '".$_SESSION['username']."', (select * from team_master b) t1, (select * from team_master b) t2
               where a.team1_id = t1.team_id
@@ -33,17 +33,19 @@
                      <table style=\"text-align: center; margin: auto;\">
                         <td><input id=\"". $row['match_id']."_".$row['t1_id'] ."\" type=\"radio\" name=\"". $row['match_id'] ."\" value=\"". $row['t1_id'] ."\"";
                         if($row['t1_id']==$row['voted_team']) $result .= " checked=\"checked\"";
+                        else if($row['t1_id']=="99" || $row['t2_id']=="99" || $row['voting_allowed']=="0") $result .= " disabled=\"disabled\"";
                         $result .= "/>
                         <label class=\"drinkcard-cc\" for=\"". $row['match_id']."_".$row['t1_id'] ."\" style=\"background-position: center; background-image: url('" .$row['t1_logo_path'] ."');\"></label></td><td width=\"50%\">
                         <label style=\"text-align: center; position: relative;\">" .getMatchDetails($row['match_id']) ."</label></td><td>
                         <input id=\"". $row['match_id']."_". $row['t2_id'] ."\" type=\"radio\" name=\"". $row['match_id'] ."\" value=\"". $row['t2_id'] ."\"";
                         if($row['t2_id']==$row['voted_team']) $result .= " checked=\"checked\"";
+                        else if($row['t1_id']=="99" || $row['t2_id']=="99" || $row['voting_allowed']=="0") $result .= " disabled=\"disabled\"";
                         $result .= "/>
                         <label class=\"drinkcard-cc\" for=\"". $row['match_id']."_".$row['t2_id'] ."\" style=\"background-position: center; background-image: url('" .$row['t2_logo_path'] ."');\"></label></td>
                       </table>
                      </div>
                   </div>";
-                  if($row['t1_id']!="99" && $row['t2_id']!="99"){
+                  if($row['t1_id']!="99" && $row['t2_id']!="99" && $row['voting_allowed']=="1"){
                   $result .= "<div class=\"mdl-layout-spacer\">
                   </div>
                   <div class=\"mdl-card__actions mdl-card--border\" style=\"text-align: center;\">
