@@ -15,7 +15,7 @@
            return $row['FirstName'];
    }
    function getMatchInfo(){
-     $sql = "select a.match_id,t1.team_id t1_id,t1.team_name t1_name,t1.logo_path t1_logo_path,t2.team_id t2_id,t2.team_name t2_name,t2.logo_path t2_logo_path,a.winner_team_id winning_team
+     $sql = "select a.match_id,t1.team_id t1_id,t1.team_name t1_name,t1.logo_path t1_logo_path,t2.team_id t2_id,t2.team_name t2_name,t2.logo_path t2_logo_path,a.winner_team_id winning_team,t1.team_code t1_code,t2.team_code t2_code
               from match_master a, (select * from team_master b) t1, (select * from team_master b) t2
               where a.team1_id = t1.team_id
               and a.team2_id = t2.team_id
@@ -25,6 +25,9 @@
      $i = 0;
      $result = "";
      while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
+       $vote_query1=mysqli_query($GLOBALS['con'],"select c.firstname, c.lastname from user_vote_master a, team_master b, user_data c where matchid=".$row['match_id']." and a.teamid=b.team_id and a.teamid=".$row['t1_id']." and a.username=c.username order by firstname, lastname");
+       $vote_query2=mysqli_query($GLOBALS['con'],"select c.firstname, c.lastname from user_vote_master a, team_master b, user_data c where matchid=".$row['match_id']." and a.teamid=b.team_id and a.teamid=".$row['t2_id']." and a.username=c.username order by firstname, lastname");
+
        $i++;
        $result .= "<div class=\"demo-cards mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col\">
                   <div class=\"cc-selector\" style=\"text-align: center; margin: auto;\">
@@ -48,6 +51,49 @@
                         $result .= ";\"></label></td>
                       </table>
                      </div>
+                  </div>
+                  <div class=\"mdl-layout-spacer\">
+                  </div>
+                    <div class=\"mdl-card__actions mdl-card--border\" style=\"text-align: center;\">
+                    <div class=\"expansion-panel list-group-item\">
+                      <a aria-controls=\"collapseOne\" aria-expanded=\"false\" class=\"expansion-panel-toggler collapsed\" data-toggle=\"collapse\" href=\"#collapseOne\" id=\"headingOne\" role=\"tab\">
+                        <div class=\"expansion-panel-icon\">
+                          <div class=\"collapsed-show\">View Votes</div>
+                          <div class=\"collapsed-hide\">Hide Votes</div>
+                        </div>
+                        <div class=\"expansion-panel-icon ml-md text-black-secondary\">
+                          <i class=\"collapsed-show material-icons\">keyboard_arrow_down</i>
+                          <i class=\"collapsed-hide material-icons\">keyboard_arrow_up</i>
+                        </div>
+                      </a>
+                      <div aria-labelledby=\"headingOne\" class=\"collapse\" data-parent=\"#accordionOne\" id=\"collapseOne\" role=\"tabpanel\">
+                        <div class=\"expansion-panel-body\" style=\"align: centre;\">
+                          <table align='center' cellpadding=\"0\" cellspacing=\"0\" style=\"width: 90%;\">
+                          <thead>
+                          <tr >
+                          <th width=\"25%\">Votes for ".$row['t1_code']."</th>
+                          <th width=\"50%\"></th>
+                          <th width=\"25%\">Votes for ".$row['t2_code']."</th>
+                          </tr>
+                          </thead>
+                          <tr>
+                          <td align='center' style=\"vertical-align:top;\">";
+                          while ($row1 = mysqli_fetch_array($vote_query1, MYSQLI_ASSOC)){
+                              $result .= $row1['firstname'] ." " .$row1['lastname'] ."<br>";
+                          }
+                          $result .= "</td>
+                          <td></td>
+                          <td align='center' style=\"vertical-align:top;\">";
+                          while ($row2 = mysqli_fetch_array($vote_query2, MYSQLI_ASSOC)){
+                              $result .= $row2['firstname'] ." " .$row2['lastname'] ."<br>";
+                          }
+                          $result .= "</td>
+                          </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
                   </div>
                 </div>";
      } 
@@ -115,9 +161,13 @@
          -->
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+      <link rel="stylesheet" href="css/material.min2.css"/>
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <link rel="stylesheet" href="css/radio_css.css"/>
       <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.cyan-light_blue.min.css"/>
       <link rel="stylesheet" href="css/styles.css"/>
-      <link rel="stylesheet" href="css/radio_css.css"/>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
       <style>
          #view-source {
          position: fixed;
@@ -152,7 +202,6 @@
                </div>
             </div>
          </main>
-      </div>
       <script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
    </body>
 </html>
