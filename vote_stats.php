@@ -14,14 +14,28 @@
            $row = mysqli_fetch_array($query,MYSQLI_ASSOC);
            return $row['FirstName'];
    }
+   function getVoteInfo($matchId, $teamId)
+   {
+     $voteSql = "select b.firstname fname, b.lastname lname from user_vote_master a, user_data b where a.username = b.username and matchid = " .$matchId ." and teamid = " .$teamId ." ";   
+     $query = mysqli_query($GLOBALS['con'],$voteSql);
+     $result = "";
+     while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
+        //$result .= $row['username']."<br>";
+        $result .= "<span class=\"voterFont\">".$row['fname']." ".$row['lname']."</span>
+                    </br>";
+     }
+     return $result;
+   }
    function getMatchInfo(){
-     $sql = "select a.match_id,t1.team_id t1_id,t1.team_name t1_name,t1.logo_path t1_logo_path,t2.team_id t2_id,t2.team_name t2_name,t2.logo_path t2_logo_path,v.teamid voted_team, CASE WHEN convert_tz(now(),@@session.time_zone,'+05:30') > DATE_SUB(match_datetime, INTERVAL 1 HOUR) THEN 0 ELSE 1 END voting_allowed
+     $sql = "select a.match_id,t1.team_id t1_id,t1.team_name t1_name,t1.logo_path t1_logo_path,t2.team_id t2_id,t2.team_name t2_name,t2.logo_path t2_logo_path,v.teamid voted_team
               from match_master a left join user_vote_master v
               on a.match_id = v.matchid and v.username = '".$_SESSION['username']."', (select * from team_master b) t1, (select * from team_master b) t2
               where a.team1_id = t1.team_id
               and a.team2_id = t2.team_id
-              and a.match_status <> 'COMPLETED'
+              and a.match_status IN ('IN PROGRESS')
               order by a.match_id asc";
+     
+     
      $query = mysqli_query($GLOBALS['con'],$sql);
      $i = 0;
      $result = "";
@@ -31,29 +45,23 @@
                   <div class=\"cc-selector\" style=\"text-align: center; margin: auto;\">
                      <div>
                      <table style=\"text-align: center; margin: auto;\">
-                        <td><input id=\"". $row['match_id']."_".$row['t1_id'] ."\" type=\"radio\" name=\"". $row['match_id'] ."\" value=\"". $row['t1_id'] ."\"";
-                        if($row['t1_id']==$row['voted_team']) $result .= " checked=\"checked\"";
-                        else if($row['t1_id']=="99" || $row['t2_id']=="99" || $row['voting_allowed']=="0") $result .= " disabled=\"disabled\"";
-                        $result .= "/>
-                        <label class=\"drinkcard-cc\" for=\"". $row['match_id']."_".$row['t1_id'] ."\" style=\"background-position: center; background-image: url('" .$row['t1_logo_path'] ."');\"></label></td><td width=\"50%\">
-                        <label style=\"text-align: center; position: relative;\">" .getMatchDetails($row['match_id']) ."</label></td><td>
-                        <input id=\"". $row['match_id']."_". $row['t2_id'] ."\" type=\"radio\" name=\"". $row['match_id'] ."\" value=\"". $row['t2_id'] ."\"";
-                        if($row['t2_id']==$row['voted_team']) $result .= " checked=\"checked\"";
-                        else if($row['t1_id']=="99" || $row['t2_id']=="99" || $row['voting_allowed']=="0") $result .= " disabled=\"disabled\"";
-                        $result .= "/>
-                        <label class=\"drinkcard-cc\" for=\"". $row['match_id']."_".$row['t2_id'] ."\" style=\"background-position: center; background-image: url('" .$row['t2_logo_path'] ."');\"></label></td>
-                      </table>
+                        <tr>
+                        <td><img src='" .$row['t1_logo_path'] ."' class='voteTd'></td>
+                        <td width=\"50%\">
+                            <label style=\"text-align: center; position: relative;\">" .getMatchDetails($row['match_id']) ."</label>
+                        </td>
+                        <td><img src='" .$row['t2_logo_path'] ."' class='voteTd'></td>
+                        </tr>
+                      
+                        <tr>
+                        <td class='tdborder'>".getVoteInfo($row['match_id'], $row['t1_id'])."</td>
+                        <td width=\"50%\">
+                        <td class='tdborder'>".getVoteInfo($row['match_id'], $row['t2_id'])."</td>
+                        </tr>
+                        </table>
+                        </div>
                      </div>
                   </div>";
-                  if($row['t1_id']!="99" && $row['t2_id']!="99" && $row['voting_allowed']=="1"){
-                  $result .= "<div class=\"mdl-layout-spacer\">
-                  </div>
-                  <div class=\"mdl-card__actions mdl-card--border\" style=\"text-align: center;\">
-                     <a id=\"btn_".$row['match_id']."\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect\" onclick=\"vote(".$row['match_id'].");\">";
-                     if (is_null($row['voted_team'])) $result .= "Cast Your Vote"; else $result .= "Update Your Vote";
-                     $result .= "</a>
-                  </div>";}
-               $result .= "</div>";
      } 
      if ($i == 0){
        $result .= "<p>No rankings yet.</p>";
@@ -128,6 +136,38 @@
          margin-bottom: 40px;
          z-index: 900;
          }
+         
+            
+         .voteTd{
+                width:200px;height:200px;
+              }
+          .voterFont {
+            font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: .04em;
+            line-height: 1;
+            min-height: 48px;
+            -webkit-flex-direction: row;
+            -ms-flex-direction: row;
+            flex-direction: row;
+            -webkit-flex-wrap: nowrap;
+            -ms-flex-wrap: nowrap;
+            flex-wrap: nowrap;
+            padding: 16px;
+            cursor: default;
+            color: rgba(0, 0, 0, .87);
+            overflow: hidden
+            }
+            
+            @media screen and (max-width:760px){
+              .voteTd{
+                width:100px;height:100px;
+              }
+            }
+            .tdborder {
+                border-top: 1px solid rgba(0, 0, 0, .1)
+            }            
       </style>
       <script
          src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
@@ -165,7 +205,7 @@
       <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
          <header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
             <div class="mdl-layout__header-row">
-               <span class="mdl-layout-title">Vote Now</span>
+               <span class="mdl-layout-title">Voting Statistics</span>
             </div>
          </header>
          <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
@@ -173,12 +213,7 @@
          </div>
          <main class="mdl-layout__content mdl-color--grey-100">
             <div class="mdl-grid">
-               <div class="demo-cards mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col">
-                  <div class="mdl-card__supporting-text mdl-card--expand mdl-color-text--grey-800">
-                     <h2 class="mdl-card__title-text" style=""><b>Hi <?php echo getFirstName(); ?>! Welcome to Gully IPL</b></h2>
-                  </div>
-                  <div class="mdl-card__supporting-text" id="message">Start voting now!</br>Click on the team that you bet to win the match and click the 'CAST YOUR VOTE' button.</br>Your vote can be updated any number of times until 1 hour before the match starts using 'UPDATE YOUR VOTE' button.</div>
-               </div>
+               
                <?php echo getMatchInfo(); ?>
                <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
                  <div class="mdl-snackbar__text"></div>
