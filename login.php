@@ -11,7 +11,7 @@ session_start();
   <meta charset="UTF-8" />
   <meta http-equiv="cleartype" content="on">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<title>SalCus Fantasy League - Login</title>
+<title>GullyIPL - Login</title>
 <meta name="description" content="">
 <meta name="keywords" content="">
 

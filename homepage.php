@@ -17,7 +17,7 @@
    function getLeaderBoards(){
      $i = 0;
      $result = "";
-     $query = mysqli_query($GLOBALS['con'],"select a.FirstName, sum(b.Points) Points from user_data a, user_vote_master b where a.username = b.username group by a.username order by sum(b.points) desc limit 3");
+     $query = mysqli_query($GLOBALS['con'],"select a.FirstName, sum(COALESCE(b.Points,0)) Points from user_data a, user_vote_master b where a.username = b.username group by a.username order by sum(COALESCE(b.Points,0)) desc, a.Firstname asc limit 3");
      while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
        $i++;
                    //$result .= "<p>" .$i .". " .$row['FirstName'] ." - " .$row['Points'] ." points</p>";
@@ -185,7 +185,7 @@
                   <span class="visuallyhidden">Accounts</span>
                   </button>
                   <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
-                     <li class="mdl-menu__item">Update Profile Info</li>
+                     <!--li class="mdl-menu__item">Update Profile Info</li-->
                      <li><a class="mdl-menu__item" href="php/signout.php">Sign Out</a></li>
                      <!--li class="mdl-menu__item"><i class="material-icons">add</i>Add another account...</li-->
                   </ul>
@@ -211,9 +211,8 @@
                      Have you got what it takes to be the best of the best? Start voting now!
                      <div>
                         <h3><b>Rules:</b></h3>
-                        1. Each correct guess will earn you 3 points.
+                        1. Each correct guess will earn you 1 point.
                         <br>2. Each incorrect guess will cost you 1 point.
-                        <br>3. Correct guesses in Semi-Finals and Final will gain you more points.
                      </div>
                   </div>
                   <div class="mdl-layout-spacer"></div>
