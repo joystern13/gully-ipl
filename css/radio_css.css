@@ -48,6 +48,10 @@
   .drinkcard-cc{
     width:100px;height:100px;
   }
+
+  .cc-selector input:disabled +.drinkcard-cc{
+    width:100px;height:100px;
+  }
 }
 /* Extras */
 a:visited{color:#888}
