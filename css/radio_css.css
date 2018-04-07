@@ -44,6 +44,11 @@
        -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
             filter: brightness(1.8) grayscale(1) opacity(.7);
 }
+@media screen and (max-width:760px){
+  .drinkcard-cc{
+    width:100px;height:100px;
+  }
+}
 /* Extras */
 a:visited{color:#888}
 a{color:#444;text-decoration:none;}
