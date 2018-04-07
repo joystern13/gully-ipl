@@ -48,7 +48,7 @@ else
 if (mysqli_query($GLOBALS['con'],$sql)) 
     echo "Your Vote has been Registered. Best Of Luck!";
 else
-    echo "Error: " . $sql . "<br>" . $con->error;
+    echo "Error: " . $con->error;
 
 $con->close();
 
