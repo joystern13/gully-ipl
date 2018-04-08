@@ -10,19 +10,13 @@
    function getLeaderBoards(){
      $i = 0;
      $result = "";
-     $query = mysqli_query($GLOBALS['con'],"select lower(a.FirstName) fname,lower(a.LastName) lname, sum(COALESCE(b.Points,0)) Points from user_data a, user_vote_master b where a.username = b.username group by a.username order by sum(COALESCE(b.Points,0)) desc, a.Firstname asc, a.LastName asc");
+     $query = mysqli_query($GLOBALS['con'],"select a.FirstName,a.LastName, sum(COALESCE(b.Points,0)) Points from user_data a, user_vote_master b where a.username = b.username group by a.username order by sum(COALESCE(b.Points,0)) desc, a.Firstname asc, a.LastName asc");
      while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
        $i++;
-       $fName = $row['fname'];
-       $lName = $row['lname'];
-       if($fName != null)
-            $fName = ucwords($fName);
-       if($lName != null)
-            $lName = ucwords($lName);
-       //$result .= "<p>" .$i .". " .$row['FirstName'] ." - " .$row['Points'] ." points</p>";
+                   //$result .= "<p>" .$i .". " .$row['FirstName'] ." - " .$row['Points'] ." points</p>";
        $result .= "<li class=\"mdl-list__item\">
        <span class=\"mdl-list__item-primary-content\">" .$i .". "
-       .$fName." " .$lName." (" .$row['Points'] ." points)
+       .$row['FirstName'] ." " .$row['LastName'] ." (" .$row['Points'] ." points)
        </span>
        </li>";
      } 

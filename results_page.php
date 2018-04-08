@@ -25,8 +25,8 @@
      $i = 0;
      $result = "";
      while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
-       $vote_query1=mysqli_query($GLOBALS['con'],"select lower(c.firstname) fname, lower(c.lastname) lname from user_vote_master a, team_master b, user_data c where matchid=".$row['match_id']." and a.teamid=b.team_id and a.teamid=".$row['t1_id']." and a.username=c.username order by firstname, lastname");
-       $vote_query2=mysqli_query($GLOBALS['con'],"select lower(c.firstname) fname, lower(c.lastname) lname from user_vote_master a, team_master b, user_data c where matchid=".$row['match_id']." and a.teamid=b.team_id and a.teamid=".$row['t2_id']." and a.username=c.username order by firstname, lastname");
+       $vote_query1=mysqli_query($GLOBALS['con'],"select c.firstname, c.lastname from user_vote_master a, team_master b, user_data c where matchid=".$row['match_id']." and a.teamid=b.team_id and a.teamid=".$row['t1_id']." and a.username=c.username order by firstname, lastname");
+       $vote_query2=mysqli_query($GLOBALS['con'],"select c.firstname, c.lastname from user_vote_master a, team_master b, user_data c where matchid=".$row['match_id']." and a.teamid=b.team_id and a.teamid=".$row['t2_id']." and a.username=c.username order by firstname, lastname");
 
        $i++;
        $result .= "<div class=\"demo-cards mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col\">
@@ -79,25 +79,13 @@
                           <tr>
                           <td align='center' style=\"vertical-align:top;\">";
                           while ($row1 = mysqli_fetch_array($vote_query1, MYSQLI_ASSOC)){
-                            $fName = $row1['fname'];
-                            $lName = $row1['lname'];
-                            if($fName != null)
-                                $fName = ucwords($fName);
-                            if($lName != null)
-                                $lName = ucwords($lName);
-                              $result .= $fName ." " .$lName ."<br>";
+                              $result .= $row1['firstname'] ." " .$row1['lastname'] ."<br>";
                           }
                           $result .= "</td>
                           <td></td>
                           <td align='center' style=\"vertical-align:top;\">";
                           while ($row2 = mysqli_fetch_array($vote_query2, MYSQLI_ASSOC)){
-                              $fName = $row2['fname'];
-                              $lName = $row2['lname'];
-                              if($fName != null)
-                                $fName = ucwords($fName);
-                              if($lName != null)
-                                $lName = ucwords($lName);
-                              $result .= $fName ." " .$lName ."<br>";
+                              $result .= $row2['firstname'] ." " .$row2['lastname'] ."<br>";
                           }
                           $result .= "</td>
                           </tr>
