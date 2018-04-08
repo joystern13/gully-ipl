@@ -20,7 +20,7 @@
               where a.team1_id = t1.team_id
               and a.team2_id = t2.team_id
               and a.match_status = 'COMPLETED'
-              order by a.match_id asc";
+              order by a.match_id desc";
      $query = mysqli_query($GLOBALS['con'],$sql);
      $i = 0;
      $result = "";
@@ -41,14 +41,16 @@
                         if($row['t1_id']==$row['winning_team']) $result .= ",url('images/win.png')";
                         $result .= ";\"></label></td>
                         <td width=\"50%\">
-                        <label style=\"text-align: center; position: relative;\">" .getMatchDetails($row['match_id']) ."</label></td><td>
+                        <label style=\"text-align: center; position: relative;\">" .getMatchDetails($row['match_id']) ."</label></td>
+                        <td>
                         <input id=\"". $row['match_id']."_". $row['t2_id'] ."\" type=\"radio\" name=\"". $row['match_id'] ."\" value=\"". $row['t2_id'] ."\"";
                         if($row['t2_id']==$row['winning_team']) $result .= " checked=\"checked\"";
                         else $result .= " disabled=\"disabled\"";
                         $result .= "/>
                         <label class=\"drinkcard-cc\" for=\"". $row['match_id']."_".$row['t2_id'] ."\" style=\"background-position: center; background-image: url('" .$row['t2_logo_path'] ."')";
                         if($row['t2_id']==$row['winning_team']) $result .= ",url('images/win.png')";
-                        $result .= ";\"></label></td>
+                        $result .= ";\"></label>
+                        </td>
                       </table>
                      </div>
                   </div>
@@ -94,8 +96,7 @@
                       </div>
                     </div>
                     </div>
-                  </div>
-                </div>";
+                  </div>";
      } 
      if ($i == 0){
        $result .= "<div class=\"demo-cards mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col\">
