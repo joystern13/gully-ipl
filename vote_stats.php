@@ -38,8 +38,8 @@
               on a.match_id = v.matchid and v.username = '".$_SESSION['username']."', (select * from team_master b) t1, (select * from team_master b) t2
               where a.team1_id = t1.team_id
               and a.team2_id = t2.team_id
-              and a.match_status IN ('IN PROGRESS')
-              order by a.match_id asc";
+              and convert_tz(now(),@@session.time_zone,'+05:30') > DATE_SUB(match_datetime, INTERVAL 1 HOUR)
+              order by a.match_id desc";
      
      
      $query = mysqli_query($GLOBALS['con'],$sql);
