@@ -1,3 +1,6 @@
+<?php
+       session_start();
+?>
 <!doctype html>
 <!--[if IEMobile 7 ]>    <html class="no-js iem7" lang="en-US"> <![endif]-->
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en-US"> <![endif]-->
@@ -40,12 +43,13 @@
             <!--div class="grid_5"-->
 				<h1>Register</h1>
                 <?php
-                session_start();
+                
 					//echo " : : : ".$_SESSION['invalid_msg'];
 						if (isset($_SESSION['invalid_msg']) && $_SESSION['invalid_msg'] != "") {
 							echo "<div class=\"error-msg\" id=\"errormsg_0_userpass\">".$_SESSION['invalid_msg']."</div>";
-	                    }
-					unset($_SESSION['invalid_msg']);
+	                   unset($_SESSION['invalid_msg']);
+                        }
+					
 					
 				?>
 				<form method="POST" action="php/register_user.php">
