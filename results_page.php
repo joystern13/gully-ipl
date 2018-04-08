@@ -56,7 +56,7 @@
                   </div>
                     <div class=\"mdl-card__actions mdl-card--border\" style=\"text-align: center;\">
                     <div class=\"expansion-panel list-group-item\">
-                      <a aria-controls=\"collapseOne\" aria-expanded=\"false\" class=\"expansion-panel-toggler collapsed\" data-toggle=\"collapse\" href=\"#collapseOne\" id=\"headingOne\" role=\"tab\">
+                      <a aria-controls=\"cp_".$row['match_id']."\" aria-expanded=\"false\" class=\"expansion-panel-toggler collapsed\" data-toggle=\"collapse\" href=\"#cp_".$row['match_id']."\" id=\"ep_".$row['match_id']."\" role=\"tab\">
                         <div class=\"expansion-panel-icon\">
                           <div class=\"collapsed-show\">View Votes</div>
                           <div class=\"collapsed-hide\">Hide Votes</div>
@@ -66,7 +66,7 @@
                           <i class=\"collapsed-hide material-icons\">keyboard_arrow_up</i>
                         </div>
                       </a>
-                      <div aria-labelledby=\"headingOne\" class=\"collapse\" data-parent=\"#accordionOne\" id=\"collapseOne\" role=\"tabpanel\">
+                      <div aria-labelledby=\"ep_".$row['match_id']."\" class=\"collapse\" data-parent=\"#accordionOne\" id=\"cp_".$row['match_id']."\" role=\"tabpanel\">
                         <div class=\"expansion-panel-body mdl-typography--body-1\" style=\"align: centre;\">
                           <table align='center' cellpadding=\"0\" cellspacing=\"0\" style=\"width: 90%;\">
                           <thead>

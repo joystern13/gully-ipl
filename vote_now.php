@@ -27,6 +27,8 @@
      $result = "";
      while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
        $i++;
+       $player_query1 = mysqli_query($GLOBALS['con'],"select b.player_name from team_master a, player_master b where a.team_id=b.team_id and a.team_id=".$row['t1_id']);
+       $player_query2 = mysqli_query($GLOBALS['con'],"select b.player_name from team_master a, player_master b where a.team_id=b.team_id and a.team_id=".$row['t2_id']);
        $result .= "<div class=\"demo-cards mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col\">
                   <div class=\"cc-selector\" style=\"text-align: center; margin: auto;\">
                      <div>
@@ -53,7 +55,42 @@
                      if (is_null($row['voted_team'])) $result .= "Cast Your Vote"; else $result .= "Update Your Vote";
                      $result .= "</a>
                   </div>";}
-               $result .= "</div>";
+                  $result .= "<div class=\"mdl-layout-spacer\">
+                  </div>
+                    <div class=\"mdl-card__actions mdl-card--border\" style=\"text-align: center;\">
+                    <div class=\"expansion-panel list-group-item\">
+                      <a aria-controls=\"cp_".$row['match_id']."\" aria-expanded=\"false\" class=\"expansion-panel-toggler collapsed\" data-toggle=\"collapse\" href=\"#cp_".$row['match_id']."\" id=\"ep_".$row['match_id']."\" role=\"tab\">
+                        <div class=\"expansion-panel-icon\">
+                          <div class=\"collapsed-show\">View Players</div>
+                          <div class=\"collapsed-hide\">Hide Players</div>
+                        </div>
+                        <div class=\"expansion-panel-icon ml-md text-black-secondary\">
+                          <i class=\"collapsed-show material-icons\">keyboard_arrow_down</i>
+                          <i class=\"collapsed-hide material-icons\">keyboard_arrow_up</i>
+                        </div>
+                      </a>
+                      <div aria-labelledby=\"ep_".$row['match_id']."\" class=\"collapse\" data-parent=\"#accordionOne\" id=\"cp_".$row['match_id']."\" role=\"tabpanel\">
+                        <div class=\"expansion-panel-body mdl-typography--body-1\" style=\"align: centre;\">
+                          <table align='center' cellpadding=\"0\" cellspacing=\"0\" style=\"width: 90%;\">
+                          <tr>
+                          <td width=\"25%\" align='center' style=\"vertical-align:top;\">";
+                          while ($row1 = mysqli_fetch_array($player_query1, MYSQLI_ASSOC)){
+                              $result .= $row1['player_name'] ."<br>";
+                          }
+                          $result .= "</td>
+                          <td width=\"50%\"></td>
+                          <td width=\"25%\" align='center' style=\"vertical-align:top;\">";
+                          while ($row2 = mysqli_fetch_array($player_query2, MYSQLI_ASSOC)){
+                              $result .= $row2['player_name'] ."<br>";
+                          }
+                          $result .= "</td>
+                          </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                    </div>";
      } 
      if ($i == 0){
        $result .= "<p>No rankings yet.</p>";
@@ -115,9 +152,13 @@
          -->
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+      <link rel="stylesheet" href="css/material.min2.css"/>
+      <link rel="stylesheet" href="css/bootstrap.min.css">
       <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.cyan-light_blue.min.css"/>
       <link rel="stylesheet" href="css/styles.css"/>
       <link rel="stylesheet" href="css/radio_css.css"/>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
       <style>
          #view-source {
          position: fixed;
