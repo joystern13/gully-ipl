@@ -7,15 +7,14 @@
    $db=mysqli_select_db($con,DB_NAME) or die("Failed to connect to MySQL: " . mysql_error());
    
    function getFirstName(){
-           $sql = "SELECT FirstName FROM user_data where username='"
-           .$_SESSION['username']
-           ."'";
+           $sql = "SELECT FirstName FROM user_data where username='".$_SESSION['username']."'";
            $query = mysqli_query($GLOBALS['con'],$sql);
            $row = mysqli_fetch_array($query,MYSQLI_ASSOC);
            return $row['FirstName'];
    }
    function getMatchInfo(){
-     $sql = "select a.match_id,t1.team_id t1_id,t1.team_name t1_name,t1.logo_path t1_logo_path,t2.team_id t2_id,t2.team_name t2_name,t2.logo_path t2_logo_path,v.teamid voted_team, CASE WHEN convert_tz(now(),@@session.time_zone,'+05:30') > DATE_SUB(match_datetime, INTERVAL 1 HOUR) THEN 0 ELSE 1 END voting_allowed
+     $sql = "select a.match_id,t1.team_id t1_id,t1.team_name t1_name,t1.logo_path t1_logo_path,t2.team_id t2_id,t2.team_name t2_name,t2.logo_path t2_logo_path,v.teamid voted_team, CASE WHEN convert_tz(now(),@@session.time_zone,'+05:30') > DATE_SUB(match_datetime, INTERVAL 1 HOUR) THEN 0 ELSE 1 END voting_allowed,
+                TIMESTAMPDIFF(SECOND, convert_tz(now(),@@session.time_zone,'+05:30'), DATE_SUB(match_datetime, INTERVAL 1 HOUR)) secsToGo
               from match_master a left join user_vote_master v
               on a.match_id = v.matchid and v.username = '".$_SESSION['username']."', (select * from team_master b) t1, (select * from team_master b) t2
               where a.team1_id = t1.team_id
@@ -25,12 +24,42 @@
      $query = mysqli_query($GLOBALS['con'],$sql);
      $i = 0;
      $result = "";
+     $isClockAdded=false;
      while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
        $i++;
        $player_query1 = mysqli_query($GLOBALS['con'],"select b.player_name from team_master a, player_master b where a.team_id=b.team_id and a.team_id=".$row['t1_id']);
        $player_query2 = mysqli_query($GLOBALS['con'],"select b.player_name from team_master a, player_master b where a.team_id=b.team_id and a.team_id=".$row['t2_id']);
-       $result .= "<div class=\"demo-cards mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col\">
-                  <div class=\"cc-selector\" style=\"text-align: center; margin: auto;\">
+       $result .= "<div class=\"demo-cards mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col\">";
+       if(!$isClockAdded && $row['voting_allowed']=="1")
+       {
+            $result .= "<script type='text/javascript'>
+		                  var clock;
+		                  $(document).ready(function() {
+		                      var clock;
+
+                    			clock = $('.clock').FlipClock({
+                    		        clockFace: 'HourlyCounter',
+                    		        autoStart: false,
+                    		        callbacks: {
+                    		        	stop: function() {
+                    		        		$('#clockDiv').html('<b>Voting Gates Closed!</b>');
+                    		        	}
+                    		        }
+                    		    });
+                    				    
+                    		    clock.setTime(". $row['secsToGo'].");
+                    		    clock.setCountdown(true);
+                    		    clock.start();
+                    
+                    		});
+                	</script>
+            <div id='clockDiv'><table width='100%' border='0'><tr><td><div class='clock'></div><div class='message'></div></td></tr></table></div>";
+            $isClockAdded=true;
+       }
+       else if($row['voting_allowed']=="0"){
+        $result .= "<div style='text-align: center;'><b>Voting Gates Closed!</b></div>";
+       }
+       $result .= "<div class=\"cc-selector\" style=\"text-align: center; margin: auto;\">
                      <div>
                      <table style=\"text-align: center; margin: auto;\">
                         <td><input id=\"". $row['match_id']."_".$row['t1_id'] ."\" type=\"radio\" name=\"". $row['match_id'] ."\" value=\"". $row['t1_id'] ."\"";
@@ -157,8 +186,10 @@
       <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.cyan-light_blue.min.css"/>
       <link rel="stylesheet" href="css/styles.css"/>
       <link rel="stylesheet" href="css/radio_css.css"/>
+      <link rel="stylesheet" href="clock/flipclock.css"/>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="clock/flipclock.js"></script>
       <style>
          #view-source {
          position: fixed;
@@ -170,8 +201,7 @@
          z-index: 900;
          }
       </style>
-      <script
-         src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+      <!-- <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script> -->
       <script lang="javascript">
          function vote(rdbName)
          {
@@ -200,6 +230,7 @@
          });
          }
       </script>
+      
    </head>
    <body>
       <!--?php include_once("php/analyticsstart.php") ?-->
@@ -219,6 +250,7 @@
                      <h2 class="mdl-card__title-text" style=""><b>Hi <?php echo getFirstName(); ?>! Welcome to Gully IPL</b></h2>
                   </div>
                   <div class="mdl-card__supporting-text" id="message">Start voting now!</br>Click on the team that you bet to win the match and click the 'CAST YOUR VOTE' button.</br>Your vote can be updated any number of times until 1 hour before the match starts using 'UPDATE YOUR VOTE' button.</div>
+                  
                </div>
                <?php echo getMatchInfo(); ?>
                <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
