@@ -8,7 +8,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="cleartype" content="on">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<title>SalCus Fantasy League - Register</title>
+<title>Gully IPL - Register</title>
 <meta name="description" content="">
 <meta name="keywords" content="">
 
@@ -39,6 +39,15 @@
         <!--div class="row"--> 
             <!--div class="grid_5"-->
 				<h1>Register</h1>
+                <?php
+                session_start();
+					//echo " : : : ".$_SESSION['invalid_msg'];
+						if (isset($_SESSION['invalid_msg']) && $_SESSION['invalid_msg'] != "") {
+							echo "<div class=\"error-msg\" id=\"errormsg_0_userpass\">".$_SESSION['invalid_msg']."</div>";
+	                    }
+					unset($_SESSION['invalid_msg']);
+					
+				?>
 				<form method="POST" action="php/register_user.php">
 				<strong>Name</Strong>
 					<table align="center" width="100%" cellpadding="0" cellspacing="0" border="0"> 

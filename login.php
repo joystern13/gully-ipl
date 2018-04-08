@@ -60,7 +60,7 @@ session_start();
 				<input id="Login" name="signIn" class="button button-submit" type="submit" value="Login">
 				<span style="display:block; height: 15px;"></span>
 				<div class="signup">
-				<a href="signup.html" style="text-decoration: none;color: #427fed;">Not yet registered? Click here</a>
+				<a href="signup.php" style="text-decoration: none;color: #427fed;">Not yet registered? Click here</a>
 				</div>
 				</form>
 			</div>
