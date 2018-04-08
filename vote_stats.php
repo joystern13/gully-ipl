@@ -16,12 +16,18 @@
    }
    function getVoteInfo($matchId, $teamId)
    {
-     $voteSql = "select b.firstname fname, b.lastname lname from user_vote_master a, user_data b where a.username = b.username and matchid = " .$matchId ." and teamid = " .$teamId ." ";   
+     $voteSql = "select lower(b.FirstName) fname,lower(b.LastName) lname from user_vote_master a, user_data b where a.username = b.username and matchid = " .$matchId ." and teamid = " .$teamId ." ";   
      $query = mysqli_query($GLOBALS['con'],$voteSql);
      $result = "";
      while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
+        $fName = $row['fname'];
+        $lName = $row['lname'];
+       if($fName != null)
+            $fName = ucwords($fName);
+         if($lName != null)
+            $lName = ucwords($lName);
         //$result .= $row['username']."<br>";
-        $result .= "<span class=\"voterFont\">".$row['fname']." ".$row['lname']."</span>
+        $result .= "<span class=\"voterFont\">".$fName." ".$lName."</span>
                     </br>";
      }
      return $result;
