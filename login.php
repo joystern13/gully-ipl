@@ -1,5 +1,8 @@
 <?php
 session_start();
+   if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+     header ("Location: homepage.php");
+   }
 ?>
 <!doctype html>
 <!--[if IEMobile 7 ]>    <html class="no-js iem7" lang="en-US"> <![endif]-->
@@ -58,9 +61,11 @@ session_start();
 				<input id="password" name="password" placeholder="Password" type="password" value="" spellcheck="false" onchange="remove_error();">
 				<span role="alert" class="error-msg" name="errormsg_0_password" id="errormsg_0_password"></span>
 				<input id="Login" name="signIn" class="button button-submit" type="submit" value="Login">
-				<span style="display:block; height: 15px;"></span>
+				<span style="display:block; height: 25px;"></span>
 				<div class="signup">
 				<a href="signup.html" style="text-decoration: none;color: #427fed;">Not yet registered? Click here</a>
+				<span style="display:block; height: 5px;"><br></span>
+				<a href="forgot_pass.php" style="text-decoration: none;color: #427fed;">Forgot Password?</a>
 				</div>
 				</form>
 			</div>
