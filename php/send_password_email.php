@@ -4,30 +4,35 @@
 	include("config.php");
 	$db = mysqli_select_db($con,DB_NAME) or die("Failed to connect to MySQL: " . mysql_error());
 
-	function sendmail(){
-		$sql = "select firstname,email,username,password from user_data where username='".$_POST['username']."'";
-		$query = mysqli_query($GLOBALS['con'],$sql);
-		$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
+	
+	$sql = "select firstname,email,username,password from user_data where username='".$_POST['username']."'";
+	$query = mysqli_query($GLOBALS['con'],$sql);
+	$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
 
-		if (!isset($row) || empty($row)) {
-			header("Location: ../forgot_pass.php");
-			exit();
-		}
-
-		$username=md5($row['username']);
-		$password=md5($row['password']);
-
-		$link = "https://gullyipl.000webhostapp.com/php/reset_password.php?key=".$username."&reset=".$password;
-
-		$msg = "Hi " .$row['firstname'] .",\nGreetings from Gully IPL.\nPlease use below link to reset your password:\n\n".$link;
-
-		// use wordwrap() if lines are longer than 70 characters
-		$msg = wordwrap($msg,70);
-		// send email
-		mail("joystern13@gmail.com","Gully IPL - Password Reset",$msg);
-		//header("Location: ../login.php");
-		//exit();
+	if (!isset($row) || empty($row)) {
+		header("Location: ../forgot_pass.php");
+		exit();
 	}
+
+	$username=md5($row['username']);
+	$password=md5($row['password']);
+
+	if(!mysqli_num_rows($query)==1){
+		header("Location: ../forgot_pass.php");
+		exit();
+	}
+
+	$link = "https://gullyipl.000webhostapp.com/php/reset_password.php?key=".$username."&reset=".$password;
+
+	$msg = "Hello " .$row['firstname'] .",\nGreetings from Gully IPL.\nPlease use below link to reset your password:\n\n".$link;
+
+	// use wordwrap() if lines are longer than 70 characters
+	$msg = wordwrap($msg,70);
+	// send email
+	mail($row['email'],"Gully IPL - Password Reset",$msg);
+	//header("Location: ../login.php");
+	//exit();
+
 ?>
 <!doctype html><html lang="en">
    <head>
