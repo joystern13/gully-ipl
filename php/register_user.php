@@ -20,7 +20,7 @@
         } else {
  
 			$query = mysqli_query($GLOBALS['con'],"SELECT * FROM user_data where lower(USERNAME) = lower('$_POST[username]')");
-			$row = mysqli_fetch_array($query,MYSQLI_BOTH);
+			//$row = mysqli_fetch_array($query,MYSQLI_BOTH);
             if(mysqli_num_rows($query) > 0) 
 			{
 				//echo "Username already exists. Please select a different username."; 
