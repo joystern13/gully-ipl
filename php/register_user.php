@@ -24,7 +24,11 @@
 			{
 				echo "Username already exists. Please select a different username."; 
 			} else {
-                                $sql = "insert into user_data (username,password,firstname,lastname,email,gender) values ('$_POST[username]','$_POST[password]','$_POST[firstname]','$_POST[lastname]','$_POST[email]','$_POST[Gender]')";
+			 
+                $fName = ucwords(strtolower($_POST['firstname']));
+                $lName = ucwords(strtolower($_POST['lastname']));
+                
+                                $sql = "insert into user_data (username,password,firstname,lastname,email,gender) values ('$_POST[username]','$_POST[password]','".$fName."','".$lName."','$_POST[email]','$_POST[Gender]')";
 				if (mysqli_query($GLOBALS['con'],$sql)) {
                                     header ("Location: ../login.php");
 				    				exit();
