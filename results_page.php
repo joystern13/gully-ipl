@@ -67,7 +67,7 @@
                         </div>
                       </a>
                       <div aria-labelledby=\"headingOne\" class=\"collapse\" data-parent=\"#accordionOne\" id=\"collapseOne\" role=\"tabpanel\">
-                        <div class=\"expansion-panel-body\" style=\"align: centre;\">
+                        <div class=\"expansion-panel-body mdl-typography--body-1\" style=\"align: centre;\">
                           <table align='center' cellpadding=\"0\" cellspacing=\"0\" style=\"width: 90%;\">
                           <thead>
                           <tr >
