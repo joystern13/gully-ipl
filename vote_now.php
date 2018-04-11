@@ -83,6 +83,7 @@
                      <a id=\"btn_".$row['match_id']."\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect\" onclick=\"vote(".$row['match_id'].");\">";
                      if (is_null($row['voted_team'])) $result .= "Cast Your Vote"; else $result .= "Update Your Vote";
                      $result .= "</a>
+                     <a id=\"del_".$row['match_id']."\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect\" onclick=\"del_vote(".$row['match_id'].");\">Delete Your Vote</a>
                   </div>";}
                   $result .= "<div class=\"mdl-layout-spacer\">
                   </div>
@@ -229,6 +230,30 @@
              }
          });
          }
+         function del_vote(rdbName)
+         {
+             var snackbarContainer = document.querySelector('#demo-toast-example');
+             
+             $.ajax({
+             type: "POST",
+             url: "php/delete_data.php",
+             data: {match_id:rdbName},
+             dataType: "text",
+             success: function(data) {
+              //$("#message").html(data);
+              $("input[name='"+rdbName+"']").prop("checked", false);
+              'use strict';
+              var msg = {message: data};
+              snackbarContainer.MaterialSnackbar.showSnackbar(msg);
+             },
+             error: function(err) {
+             //alert("error : "+err);
+             'use strict';
+              var msg = {message: err};
+              snackbarContainer.MaterialSnackbar.showSnackbar(msg);
+             }
+         });
+        }
       </script>
       
    </head>
