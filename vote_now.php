@@ -82,9 +82,11 @@
                   <div class=\"mdl-card__actions mdl-card--border\" style=\"text-align: center;\">
                      <a id=\"btn_".$row['match_id']."\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect\" onclick=\"vote(".$row['match_id'].");\">";
                      if (is_null($row['voted_team'])) $result .= "Cast Your Vote"; else $result .= "Update Your Vote";
-                     $result .= "</a>
-                     <a id=\"del_".$row['match_id']."\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect\" onclick=\"del_vote(".$row['match_id'].");\">Delete Your Vote</a>
-                  </div>";}
+                     $result .= "</a><a id=\"del_".$row['match_id']."\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect\" onclick=\"del_vote(".$row['match_id'].");\"";
+                     if (is_null($row['voted_team'])) $result .= " style=\"display: none;\"";
+                     else $result .= "style=\"display:true\"";
+                      $result .= ">Delete Your Vote</a>";
+                  $result .= "</div>";}
                   $result .= "<div class=\"mdl-layout-spacer\">
                   </div>
                     <div class=\"mdl-card__actions mdl-card--border\" style=\"text-align: center;\">
@@ -217,9 +219,12 @@
              dataType: "text",
              success: function(data) {
               //$("#message").html(data);
-              $("#btn_"+rdbName).html("UPDATE YOUR VOTE");
               'use strict';
               var msg = {message: data};
+              if(String(data).indexOf("Please select the team")==-1){
+                $("#btn_"+rdbName).html("UPDATE YOUR VOTE");
+                document.getElementById("del_"+rdbName).style.display = "inline";
+              }
               snackbarContainer.MaterialSnackbar.showSnackbar(msg);
              },
              error: function(err) {
@@ -243,6 +248,7 @@
               //$("#message").html(data);
               $("input[name='"+rdbName+"']").prop("checked", false);
               $("#btn_"+rdbName).html("CAST YOUR VOTE");
+              document.getElementById("del_"+rdbName).style.display = "none";
               'use strict';
               var msg = {message: data};
               snackbarContainer.MaterialSnackbar.showSnackbar(msg);
