@@ -272,6 +272,7 @@
              success: function(data) {
               //$("#message").html(data);
               $("input[name='"+rdbName+"']").prop("checked", false);
+              $("#btn_"+rdbName).html("CAST YOUR VOTE");
               'use strict';
               var msg = {message: data};
               snackbarContainer.MaterialSnackbar.showSnackbar(msg);
