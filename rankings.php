@@ -10,13 +10,13 @@
    function getLeaderBoards(){
      $i = 0;
      $result = "";
-     $query = mysqli_query($GLOBALS['con'],"select a.FirstName,a.LastName, sum(COALESCE(b.Points,0)) Points from user_data a, user_vote_master b where a.username = b.username and b.points is not null group by a.username order by sum(COALESCE(b.Points,0)) desc, a.Firstname asc, a.LastName asc");
+     $query = mysqli_query($GLOBALS['con'],"select a.FirstName,a.LastName, sum(COALESCE(b.Points,0)) Points, a.username username from user_data a, user_vote_master b where a.username = b.username and b.points is not null group by a.username order by sum(COALESCE(b.Points,0)) desc, a.Firstname asc, a.LastName asc");
      while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
        $i++;
                    //$result .= "<p>" .$i .". " .$row['FirstName'] ." - " .$row['Points'] ." points</p>";
        $result .= "<li class=\"mdl-list__item\">
        <span class=\"mdl-list__item-primary-content\">" .$i .". "
-       .$row['FirstName'] ." " .$row['LastName'] ." (" .$row['Points'] ." points)
+       .$row['FirstName'] ." " .$row['LastName'] ." (" .$row['Points'] ." points) &nbsp;&nbsp;&nbsp;".getWinLoss($row['username'])."
        </span>
        </li>";
      } 
@@ -24,6 +24,26 @@
        $result .= "<p>No rankings yet.</p>";
      }
      return $result;
+   }
+   
+   function getWinLoss($username)
+   {
+        $result = "<table><tr>";
+        $sql = "SELECT (case when a.teamid = b.winner_team_id then 'W' else 'L' end) as win_loss
+                FROM user_vote_master a, match_master b
+                where username = '".$username."'
+                and a.matchid = b.match_id
+                and b.match_status = 'COMPLETED'
+                order by b.match_id";
+        $query = mysqli_query($GLOBALS['con'],$sql);
+        while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
+            if($row['win_loss'] == "W")
+                $result .= "<td class='tdWin'>".$row['win_loss']."</td>";
+            else
+                $result .= "<td class='tdLoss'>".$row['win_loss']."</td>";
+        }
+        $result .= "</tr></table>";
+        return $result;
    }
    
    ?>
@@ -80,6 +100,18 @@
          margin-right: 40px;
          margin-bottom: 40px;
          z-index: 900;
+         }
+      </style>
+      <style>
+         .tdWin {
+         font-size: medium;
+         font-weight: bolder;
+         color: green;
+         }
+         .tdLoss {
+         font-size: medium;
+         font-weight: bolder;
+         color: red;
          }
       </style>
    </head>
