@@ -12,6 +12,21 @@
            $row = mysqli_fetch_array($query,MYSQLI_ASSOC);
            return $row['FirstName'];
    }
+   function getWinLoss($teamId)
+   {
+        $result = "<table><tr>";
+        $sql = "SELECT (CASE WHEN winner_team_id = ".$teamId." then 'W' ELSE 'L' END) as win_loss "
+                . "FROM match_master WHERE (team1_id = ".$teamId." or team2_id = ".$teamId.") and match_status = 'COMPLETED' order by match_id";
+        $query = mysqli_query($GLOBALS['con'],$sql);
+        while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
+            if($row['win_loss'] == "W")
+                $result .= "<td class='tdWin'>".$row['win_loss']."</td>";
+            else
+                $result .= "<td class='tdLoss'>".$row['win_loss']."</td>";
+        }
+        $result .= "</tr></table>";
+        return $result;
+   }
    function getMatchInfo(){
      $sql = "select a.match_id,t1.team_id t1_id,t1.team_name t1_name,t1.logo_path t1_logo_path,t2.team_id t2_id,t2.team_name t2_name,t2.logo_path t2_logo_path,v.teamid voted_team, CASE WHEN convert_tz(now(),@@session.time_zone,'+05:30') > DATE_SUB(match_datetime, INTERVAL 1 HOUR) THEN 0 ELSE 1 END voting_allowed,
                 TIMESTAMPDIFF(SECOND, convert_tz(now(),@@session.time_zone,'+05:30'), DATE_SUB(match_datetime, INTERVAL 1 HOUR)) secsToGo
@@ -62,17 +77,20 @@
        $result .= "<div class=\"cc-selector\" style=\"text-align: center; margin: auto;\">
                      <div>
                      <table style=\"text-align: center; margin: auto;\">
-                        <td><input id=\"". $row['match_id']."_".$row['t1_id'] ."\" type=\"radio\" name=\"". $row['match_id'] ."\" value=\"". $row['t1_id'] ."\"";
-                        if($row['t1_id']==$row['voted_team']) $result .= " checked=\"checked\"";
-                        else if($row['t1_id']=="99" || $row['t2_id']=="99" || $row['voting_allowed']=="0") $result .= " disabled=\"disabled\"";
+                        <td align='center'><input id=\"". $row['match_id']."_".$row['t1_id'] ."\" type=\"radio\" name=\"". $row['match_id'] ."\" value=\"". $row['t1_id'] ."\"";
+                        if($row['t1_id']==$row['voted_team']) 
+                            $result .= " checked=\"checked\"";
+                        else if($row['t1_id']=="99" || $row['t2_id']=="99" || $row['voting_allowed']=="0")
+                            $result .= " disabled=\"disabled\"";
                         $result .= "/>
-                        <label class=\"drinkcard-cc\" for=\"". $row['match_id']."_".$row['t1_id'] ."\" style=\"background-position: center; background-image: url('" .$row['t1_logo_path'] ."');\"></label></td><td width=\"50%\">
-                        <label style=\"text-align: center; position: relative;\">" .getMatchDetails($row['match_id']) ."</label></td><td>
+                        <label class=\"drinkcard-cc\" for=\"". $row['match_id']."_".$row['t1_id'] ."\" style=\"background-position: center; background-image: url('" .$row['t1_logo_path'] ."');\"></label></br>".getWinLoss($row['t1_id'])."</td><td width=\"50%\">
+                        <label style=\"text-align: center; position: relative;\">" .getMatchDetails($row['match_id']) ."</label></td>
+                        <td align='center'>
                         <input id=\"". $row['match_id']."_". $row['t2_id'] ."\" type=\"radio\" name=\"". $row['match_id'] ."\" value=\"". $row['t2_id'] ."\"";
                         if($row['t2_id']==$row['voted_team']) $result .= " checked=\"checked\"";
                         else if($row['t1_id']=="99" || $row['t2_id']=="99" || $row['voting_allowed']=="0") $result .= " disabled=\"disabled\"";
                         $result .= "/>
-                        <label class=\"drinkcard-cc\" for=\"". $row['match_id']."_".$row['t2_id'] ."\" style=\"background-position: center; background-image: url('" .$row['t2_logo_path'] ."');\"></label></td>
+                        <label class=\"drinkcard-cc\" for=\"". $row['match_id']."_".$row['t2_id'] ."\" style=\"background-position: center; background-image: url('" .$row['t2_logo_path'] ."');\"></label></br>".getWinLoss($row['t2_id'])."</td>
                       </table>
                      </div>
                   </div>";
@@ -193,6 +211,18 @@
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script src="clock/flipclock.js"></script>
+      <style>
+         .tdWin {
+         font-size: medium;
+         font-weight: bolder;
+         color: green;
+         }
+         .tdLoss {
+         font-size: medium;
+         font-weight: bolder;
+         color: red;
+         }
+      </style>
       <style>
          #view-source {
          position: fixed;
