@@ -15,7 +15,7 @@ function onScoring(json){
 }
 function getJSON(matchname) {
 	$.ajax({
-	  url: "http://datacdn.iplt20.com/dynamic/data/core/cricket/2012/ipl2018/"+matchname+"/scoring.js",
+	  url: "https://datacdn.iplt20.com/dynamic/data/core/cricket/2012/ipl2018/"+matchname+"/scoring.js",
 	  dataType: "jsonp"
 	});
 };
