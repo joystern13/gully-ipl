@@ -5,6 +5,18 @@
    }
    include("php/config.php");
    $db=mysqli_select_db($con,DB_NAME) or die("Failed to connect to MySQL: " . mysql_error());
+
+  function updateMatchResults(){
+    $match = "SELECT match_id,match_name FROM match_master where match_datetime<convert_tz(now(),@@session.time_zone,'+05:30') and match_status<>'COMPLETED'";
+    $result = mysqli_query($GLOBALS['con'],$match);
+    echo "<script type=\"text/javascript\" src=\"scripts/matchapicall.js\"></script>";
+    while ($rec =  mysqli_fetch_array($result, MYSQLI_ASSOC)){
+      //call api for each match
+      echo "<script type=\"text/javascript\">
+                getJSON('".$rec['match_name']."');
+            </script>";
+    }
+  }
    
    function getFirstName(){
            $sql = "SELECT FirstName FROM user_data where username='"
@@ -169,6 +181,7 @@
       <link rel="stylesheet" href="css/styles.css"/>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <?php echo updateMatchResults(); ?>
       <style>
          #view-source {
          position: fixed;
