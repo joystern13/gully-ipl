@@ -33,6 +33,7 @@
               where a.team1_id = t1.team_id
               and a.team2_id = t2.team_id
               and convert_tz(now(),@@session.time_zone,'+05:30') > DATE_SUB(match_datetime, INTERVAL 1 HOUR)
+              and a.match_status <> 'COMPLETED'
               order by a.match_id desc";
      
      
@@ -64,7 +65,11 @@
                   </div>";
      } 
      if ($i == 0){
-       $result .= "<p>No rankings yet.</p>";
+       $result .= "<div class=\"demo-cards mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col\">
+                  <div class=\"mdl-card__supporting-text mdl-card--expand mdl-color-text--grey-800\">
+                     <h2 class=\"mdl-card__title-text\" style=\"text-align:center\"><b>Only in progress and matches whose voting gates are closed will be displayed on this screen. For full results visit the \"Match Results\" page.</b></h2>
+                  </div>
+               </div>";
      }
      return $result;
    }
