@@ -1,0 +1,9 @@
+#redirect http to https
+RewriteCond %{REQUEST_URI} !^/[0-9]+\..+\.cpaneldcv$
+RewriteCond %{REQUEST_URI} !^/\.well-known/pki-validation/[A-F0-9]{32}\.txt(?:\ Comodo\ DCV)?$
+RewriteEngine On 
+RewriteCond %{SERVER_PORT} 8010
+RewriteRule ^(.*)$ http://localhost/gullyipl/$1 [R,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]

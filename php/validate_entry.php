@@ -11,7 +11,7 @@
                 } elseif (empty($_POST['password'])){
                         echo "Password cannot be left blank. Login Failed.";
                 }else {
-            $sql="SELECT * FROM user_data where lower(USERNAME) = lower('$_POST[username]') AND PASSWORD = '$_POST[password]'";
+            $sql="SELECT * FROM user_data where lower(USERNAME) = lower('$_POST[username]') AND PASSWORD = '$_POST[password]' AND ACTIVE=1";
 			$query = mysqli_query($GLOBALS['con'],$sql);
 			//echo $sql;
 			$row = mysqli_fetch_array($query,MYSQLI_BOTH);
