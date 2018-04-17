@@ -29,12 +29,19 @@
    function getWinLoss($username)
    {
         $result = "<table><tr>";
-        $sql = "SELECT (case when a.teamid = b.winner_team_id then 'W' else 'L' end) as win_loss
+
+        $sql = "SELECT (case when teamid = winner_team_id then 'W' else 'L' end) as win_loss
+                from
+                (
+                select a.teamid, b.winner_team_id, b.match_id
                 FROM user_vote_master a, match_master b
                 where username = '".$username."'
                 and a.matchid = b.match_id
                 and b.match_status = 'COMPLETED'
-                order by b.match_id";
+                order by b.match_id desc
+                ) innerTable
+                limit 10";
+        
         $query = mysqli_query($GLOBALS['con'],$sql);
         while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
             if($row['win_loss'] == "W")
