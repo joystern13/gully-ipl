@@ -1,67 +1,67 @@
 <?php
-   session_start();
-   if (!(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true)) {
-     header ("Location: login.php");
-   }
-   include("php/config.php");
-   $db=mysqli_select_db($con,DB_NAME) or die("Failed to connect to MySQL: " . mysql_error());
+session_start();
+if (!(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true)) {
+    header ("Location: login.php");
+}
+include("php/config.php");
+$db=mysqli_select_db($con,DB_NAME) or die("Failed to connect to MySQL: " . mysql_error());
 
-  function updateMatchResults(){
+function updateMatchResults(){
     $match = "SELECT match_id,match_name FROM match_master where match_datetime<convert_tz(now(),@@session.time_zone,'+05:30') and match_status<>'COMPLETED'";
     $result = mysqli_query($GLOBALS['con'],$match);
     echo "<script type=\"text/javascript\" src=\"scripts/matchapicall.js\"></script>";
     while ($rec =  mysqli_fetch_array($result, MYSQLI_ASSOC)){
-      //call api for each match
-      echo "<script type=\"text/javascript\">
+        //call api for each match
+        echo "<script type=\"text/javascript\">
                 getJSON('".$rec['match_name']."');
             </script>";
     }
-  }
-   
-   function getFirstName(){
-           $sql = "SELECT FirstName FROM user_data where username='"
-           .$_SESSION['username']
-           ."'";
-           $query = mysqli_query($GLOBALS['con'],$sql);
-           $row = mysqli_fetch_array($query,MYSQLI_ASSOC);
-           return $row['FirstName'];
-   }
-   function getMatchInfo(){
-     $sql = "select a.match_id,t1.team_id t1_id,t1.team_name t1_name,t1.logo_path t1_logo_path,t2.team_id t2_id,t2.team_name t2_name,t2.logo_path t2_logo_path,a.winner_team_id winning_team,t1.team_code t1_code,t2.team_code t2_code
+}
+
+function getFirstName(){
+    $sql = "SELECT FirstName FROM user_data where username='"
+        .$_SESSION['username']
+        ."'";
+        $query = mysqli_query($GLOBALS['con'],$sql);
+        $row = mysqli_fetch_array($query,MYSQLI_ASSOC);
+        return $row['FirstName'];
+}
+function getMatchInfo(){
+    $sql = "select a.match_id,t1.team_id t1_id,t1.team_name t1_name,t1.logo_path t1_logo_path,t2.team_id t2_id,t2.team_name t2_name,t2.logo_path t2_logo_path,a.winner_team_id winning_team,t1.team_code t1_code,t2.team_code t2_code
               from match_master a, (select * from team_master b) t1, (select * from team_master b) t2
               where a.team1_id = t1.team_id
               and a.team2_id = t2.team_id
               and a.match_status = 'COMPLETED'
               order by a.match_id desc";
-     $query = mysqli_query($GLOBALS['con'],$sql);
-     $i = 0;
-     $result = "";
-     while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
-       $vote_query1=mysqli_query($GLOBALS['con'],"select c.firstname, c.lastname from user_vote_master a, team_master b, user_data c where matchid=".$row['match_id']." and a.teamid=b.team_id and a.teamid=".$row['t1_id']." and a.username=c.username order by firstname, lastname");
-       $vote_query2=mysqli_query($GLOBALS['con'],"select c.firstname, c.lastname from user_vote_master a, team_master b, user_data c where matchid=".$row['match_id']." and a.teamid=b.team_id and a.teamid=".$row['t2_id']." and a.username=c.username order by firstname, lastname");
-
-       $i++;
-       $result .= "<div class=\"demo-cards mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col\">
+    $query = mysqli_query($GLOBALS['con'],$sql);
+    $i = 0;
+    $result = "";
+    while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
+        $vote_query1=mysqli_query($GLOBALS['con'],"select c.firstname, c.lastname from user_vote_master a, team_master b, user_data c where matchid=".$row['match_id']." and a.teamid=b.team_id and a.teamid=".$row['t1_id']." and a.username=c.username order by firstname, lastname");
+        $vote_query2=mysqli_query($GLOBALS['con'],"select c.firstname, c.lastname from user_vote_master a, team_master b, user_data c where matchid=".$row['match_id']." and a.teamid=b.team_id and a.teamid=".$row['t2_id']." and a.username=c.username order by firstname, lastname");
+        
+        $i++;
+        $result .= "<div class=\"demo-cards mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col\">
                   <div class=\"cc-selector\" style=\"text-align: center; margin: auto;\">
                      <div>
                      <table style=\"text-align: center; margin: auto;\">
                         <td><input id=\"". $row['match_id']."_".$row['t1_id'] ."\" type=\"radio\" name=\"". $row['match_id'] ."\" value=\"". $row['t1_id'] ."\"";
-                        if($row['t1_id']==$row['winning_team']) $result .= " checked=\"checked\"";
-                        else $result .= " disabled=\"disabled\"";
-                        $result .= "/>
+        if($row['t1_id']==$row['winning_team']) $result .= " checked=\"checked\"";
+        else $result .= " disabled=\"disabled\"";
+        $result .= "/>
                         <label class=\"drinkcard-cc\" for=\"". $row['match_id']."_".$row['t1_id'] ."\" style=\"background-position: center; background-image: url('" .$row['t1_logo_path'] ."')";
-                        if($row['t1_id']==$row['winning_team']) $result .= ",url('images/win.png')";
-                        $result .= ";\"></label></td>
+        if($row['t1_id']==$row['winning_team']) $result .= ",url('images/win.png')";
+        $result .= ";\"></label></td>
                         <td width=\"50%\">
-                        <label style=\"text-align: center; position: relative;\">" .getMatchDetails($row['match_id']) ."</label></td>
+                        <label class='matchFont' style=\"text-align: center; position: relative;\">" .getMatchDetails($row['match_id']) ."</label></td>
                         <td>
                         <input id=\"". $row['match_id']."_". $row['t2_id'] ."\" type=\"radio\" name=\"". $row['match_id'] ."\" value=\"". $row['t2_id'] ."\"";
-                        if($row['t2_id']==$row['winning_team']) $result .= " checked=\"checked\"";
-                        else $result .= " disabled=\"disabled\"";
-                        $result .= "/>
+        if($row['t2_id']==$row['winning_team']) $result .= " checked=\"checked\"";
+        else $result .= " disabled=\"disabled\"";
+        $result .= "/>
                         <label class=\"drinkcard-cc\" for=\"". $row['match_id']."_".$row['t2_id'] ."\" style=\"background-position: center; background-image: url('" .$row['t2_logo_path'] ."')";
-                        if($row['t2_id']==$row['winning_team']) $result .= ",url('images/win.png')";
-                        $result .= ";\"></label>
+        if($row['t2_id']==$row['winning_team']) $result .= ",url('images/win.png')";
+        $result .= ";\"></label>
                         </td>
                       </table>
                      </div>
@@ -81,27 +81,27 @@
                         </div>
                       </a>
                       <div aria-labelledby=\"ep_".$row['match_id']."\" class=\"collapse\" data-parent=\"#accordionOne\" id=\"cp_".$row['match_id']."\" role=\"tabpanel\">
-                        <div class=\"expansion-panel-body mdl-typography--body-1\" style=\"align: centre;\">
-                          <table align='center' cellpadding=\"0\" cellspacing=\"0\" style=\"width: 90%;\">
+                        <div class=\"expansion-panel-body\" style=\"align: centre;\">
+                          <table align='center' cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\">
                           <thead>
                           <tr >
-                          <th width=\"25%\">Votes for ".$row['t1_code']."</th>
-                          <th width=\"50%\"></th>
-                          <th width=\"25%\">Votes for ".$row['t2_code']."</th>
+                          <th width=\"35%\">".$row['t1_code']." (".mysqli_num_rows($vote_query1).")</th>
+                          <th width=\"30%\"></th>
+                          <th width=\"35%\">".$row['t2_code']." (".mysqli_num_rows($vote_query2).")</th>
                           </tr>
                           </thead>
                           <tr>
-                          <td align='center' style=\"vertical-align:top;\">";
-                          while ($row1 = mysqli_fetch_array($vote_query1, MYSQLI_ASSOC)){
-                              $result .= $row1['firstname'] ." " .$row1['lastname'] ."<br>";
-                          }
-                          $result .= "</td>
+                          <td align='center' class='voterFont' style=\"vertical-align:top;\">";
+        while ($row1 = mysqli_fetch_array($vote_query1, MYSQLI_ASSOC)){
+            $result .= $row1['firstname'] ." " .substr($row1['lastname'],0,1) ."<br>";
+        }
+        $result .= "</td>
                           <td></td>
-                          <td align='center' style=\"vertical-align:top;\">";
-                          while ($row2 = mysqli_fetch_array($vote_query2, MYSQLI_ASSOC)){
-                              $result .= $row2['firstname'] ." " .$row2['lastname'] ."<br>";
-                          }
-                          $result .= "</td>
+                          <td align='center' class='voterFont' style=\"vertical-align:top;\">";
+        while ($row2 = mysqli_fetch_array($vote_query2, MYSQLI_ASSOC)){
+            $result .= $row2['firstname'] ." " .substr($row2['lastname'],0,1) ."<br>";
+        }
+        $result .= "</td>
                           </tr>
                           </table>
                         </div>
@@ -109,18 +109,18 @@
                     </div>
                     </div>
                   </div>";
-     } 
-     if ($i == 0){
-       $result .= "<div class=\"demo-cards mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col\">
+    }
+    if ($i == 0){
+        $result .= "<div class=\"demo-cards mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col\">
                   <div class=\"mdl-card__supporting-text mdl-card--expand mdl-color-text--grey-800\">
                      <h2 class=\"mdl-card__title-text\" style=\"text-align:center\"><b>No matches concluded yet!</b></h2>
                   </div>
                </div>";
-     }
-     return $result;
-   }
+    }
+    return $result;
+}
 
-   function getMatchDetails($match_id){
+function getMatchDetails($match_id){
     $sql = "SELECT match_description,
                 DATE_FORMAT(match_datetime, '%d %b %Y %h:%i %p') match_time,
                 b.venue_name_long, b.venue_city, a.result_desc
@@ -130,8 +130,8 @@
     $query = mysqli_query($GLOBALS['con'],$sql);
     $row = mysqli_fetch_array($query,MYSQLI_ASSOC);
     return "<b>".$row['match_description'] ."</b></br>" .$row['match_time'] ." IST</br>" .$row['venue_name_long'] .",</br>".$row['venue_city']."</br>" .$row['result_desc'];
-   }
-   ?>
+}
+?>
 <!doctype html>
 <!--
    Material Design Lite
@@ -192,6 +192,29 @@
          margin-bottom: 40px;
          z-index: 900;
          }
+         .voterFont {
+                font-size: 18px;
+                font-weight: 400;
+                letter-spacing: 0
+            }
+         .matchFont{
+            font-size: 14px;
+                font-weight: 400;
+                letter-spacing: 0
+            }
+            @media screen and (max-width:760px){
+              .voterFont {
+                font-size: 12px;
+                font-weight: 400;
+                letter-spacing: 0
+                } 
+                
+              .matchFont{
+                font-size: 10px;
+                font-weight: 400;
+                letter-spacing: 0
+            }
+            }
       </style>
       <script
          src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
