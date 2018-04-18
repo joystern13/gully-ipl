@@ -62,13 +62,10 @@ function getWinLoss($username)
     $query = mysqli_query($GLOBALS['con'], $sql);
     while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)) {
         if ($row['win_loss'] == "W")
-            //$result .= "<td align='center' class='tdWin'>" . $row['win_loss'] . "</td>";
             $result .= "&nbsp;<img src='images/green.png' class='imgClass'>";
         else if ($row['win_loss'] == "L")
-            //$result .= "<td align='center' class='tdLoss'>" . $row['win_loss'] . "</td>";
             $result .= "&nbsp;<img src='images/red.jpg' class='imgClass'>";
         else
-            //$result .= "<td align='center' class='tdNothing'>" . $row['win_loss'] . "</td>";
             $result .= "&nbsp;<img src='images/black.png' class='imgClass'>";
     }
     //$result .= "</tr></table>";
@@ -142,25 +139,6 @@ function getWinLoss($username)
     font-weight: 400;
     letter-spacing: 0
     }
-.tdWin {
-    width: 14px;
-	font-size: 14px;
-	font-weight: bolder;
-	color: green;
-}
-
-.tdLoss {
-    width: 14px;
-	font-size: 14px;
-	font-weight: bolder;
-	color: red;
-}
-.tdNothing {
-	width: 14px;
-	font-size: 14px;
-	font-weight: bolder;
-	color: black;
-}
 .imgClass {
 	width: 10px;
 	height: 10px;
@@ -171,25 +149,6 @@ function getWinLoss($username)
                 font-size: 12px;
                 font-weight: 400;
                 letter-spacing: 0
-                }
-              .tdWin {
-                    width: 10px;
-                	font-size: 10px;
-                	font-weight: bolder;
-                	color: green;
-                }
-                
-                .tdLoss {
-                    width: 10px;
-                	font-size: 10px;
-                	font-weight: bolder;
-                	color: red;
-                }
-                .tdNothing {
-                	width: 10px;
-                	font-size: 10px;
-                	font-weight: bolder;
-                	color: black;
                 }
                 .imgClass {
                 	width: 8px;
