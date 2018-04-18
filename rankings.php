@@ -11,18 +11,20 @@ function getLeaderBoards()
     $i = 0;
     $result = "";
     $query = mysqli_query($GLOBALS['con'], "select a.FirstName,a.LastName, sum(COALESCE(b.Points,0)) Points, a.username username from user_data a, user_vote_master b where a.username = b.username and b.points is not null group by a.username order by sum(COALESCE(b.Points,0)) desc, a.Firstname asc, a.LastName asc");
-    $result = "<table cellspacing=6><thead><th align='left'>Rank</th><th align='left'>Player</th><th align='left'>Points</th><th align='left'>Last 10 mathces</th></thead>";
+    $result = "<table cellspacing=6><thead><th align='left'>Rank</th><th align='left'>Player</th><th align='left'>Points</th><th align='left'>Last 10 matches</th></thead>";
     while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)) {
         $i ++;
         // $result .= "<p>" .$i .". " .$row['FirstName'] ." - " .$row['Points'] ." points</p>";
-        /* $result .= "<li class=\"mdl-list__item\">
-         <span class=\"mdl-list__item-primary-content\">" . $i . ". " . $row['FirstName'] . " " . $row['LastName'] . " (" . $row['Points'] . " points) &nbsp;&nbsp;&nbsp;" . getWinLoss($row['username']) . "
-         </span>
-         </li>"; */
+        /*
+         * $result .= "<li class=\"mdl-list__item\">
+         * <span class=\"mdl-list__item-primary-content\">" . $i . ". " . $row['FirstName'] . " " . $row['LastName'] . " (" . $row['Points'] . " points) &nbsp;&nbsp;&nbsp;" . getWinLoss($row['username']) . "
+         * </span>
+         * </li>";
+         */
         $result .= "<tr class=\"mdl-list__item-primary-content\">
-                        <td>" . $i . ".</td>
-                        <td>" . $row['FirstName'] . " " . substr($row['LastName'],0,1) . "</td>
-                        <td>" .$row['Points'] ."</td>
+                        <td class='voterFont' align='right'>" . $i . ".</td>
+                        <td class='voterFont'>" . $row['FirstName'] . " " . substr($row['LastName'], 0, 1) . "</td>
+                        <td class='voterFont' align='right'>" . $row['Points'] . "</td>
                         <td>" . getWinLoss($row['username']) . "</td>
                     </tr>";
     }
@@ -35,29 +37,41 @@ function getLeaderBoards()
 
 function getWinLoss($username)
 {
-    $result = "<table width='100%'><tr>";
+    //$result = "<table width='100%'><tr>";
+    $result = "";
     
-    $sql = "SELECT (case when teamid = winner_team_id then 'W' else 'L' end) as win_loss, match_id
-                from
-                (
-                select a.teamid, b.winner_team_id, b.match_id
-                FROM user_vote_master a, match_master b
-                where username = '" . $username . "'
-                and a.matchid = b.match_id
-                and b.match_status = 'COMPLETED'
-                order by b.match_id desc
-                ) innerTable
-                order by match_id
-                limit 10";
+    $sql = "select win_loss, matchid
+            from
+            (SELECT 
+                (CASE
+                    WHEN a.teamid = b.winner_team_id THEN 'W'
+                    WHEN a.teamid <> b.winner_team_id THEN 'L'
+                    ELSE '-'
+                END) AS win_loss,
+                b.match_id matchid
+            FROM
+                user_vote_master a
+                    RIGHT OUTER JOIN
+                match_master b ON (a.matchid = b.match_id AND a.username = '".$username."')
+            WHERE
+                b.match_status = 'COMPLETED'
+            order by b.match_id desc
+            limit 10) wins
+            order by matchid";
     
     $query = mysqli_query($GLOBALS['con'], $sql);
     while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)) {
         if ($row['win_loss'] == "W")
-            $result .= "<td class='tdWin'>" . $row['win_loss'] . "</td>";
-            else
-                $result .= "<td class='tdLoss'>" . $row['win_loss'] . "</td>";
+            //$result .= "<td align='center' class='tdWin'>" . $row['win_loss'] . "</td>";
+            $result .= "&nbsp;<img src='images/green.png' class='imgClass'>";
+        else if ($row['win_loss'] == "L")
+            //$result .= "<td align='center' class='tdLoss'>" . $row['win_loss'] . "</td>";
+            $result .= "&nbsp;<img src='images/red.jpg' class='imgClass'>";
+        else
+            //$result .= "<td align='center' class='tdNothing'>" . $row['win_loss'] . "</td>";
+            $result .= "&nbsp;<img src='images/black.png' class='imgClass'>";
     }
-    $result .= "</tr></table>";
+    //$result .= "</tr></table>";
     return $result;
 }
 
@@ -123,17 +137,65 @@ function getWinLoss($username)
 }
 </style>
 <style>
+.voterFont {
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0
+    }
 .tdWin {
-	font-size: medium;
+    width: 14px;
+	font-size: 14px;
 	font-weight: bolder;
 	color: green;
 }
 
 .tdLoss {
-	font-size: medium;
+    width: 14px;
+	font-size: 14px;
 	font-weight: bolder;
 	color: red;
 }
+.tdNothing {
+	width: 14px;
+	font-size: 14px;
+	font-weight: bolder;
+	color: black;
+}
+.imgClass {
+	width: 10px;
+	height: 10px;
+}
+
+@media screen and (max-width:760px){
+            .voterFont {
+                font-size: 12px;
+                font-weight: 400;
+                letter-spacing: 0
+                }
+              .tdWin {
+                    width: 10px;
+                	font-size: 10px;
+                	font-weight: bolder;
+                	color: green;
+                }
+                
+                .tdLoss {
+                    width: 10px;
+                	font-size: 10px;
+                	font-weight: bolder;
+                	color: red;
+                }
+                .tdNothing {
+                	width: 10px;
+                	font-size: 10px;
+                	font-weight: bolder;
+                	color: black;
+                }
+                .imgClass {
+                	width: 8px;
+                	height: 8px;
+                }                    
+            }
 </style>
 </head>
 <body>
