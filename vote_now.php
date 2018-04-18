@@ -14,17 +14,19 @@
    }
    function getWinLoss($teamId)
    {
-        $result = "<table><tr>";
+        $result = "";
         $sql = "SELECT (CASE WHEN winner_team_id = ".$teamId." then 'W' ELSE 'L' END) as win_loss "
                 . "FROM match_master WHERE (team1_id = ".$teamId." or team2_id = ".$teamId.") and match_status = 'COMPLETED' order by match_id";
         $query = mysqli_query($GLOBALS['con'],$sql);
         while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
-            if($row['win_loss'] == "W")
-                $result .= "<td class='tdWin'>".$row['win_loss']."</td>";
-            else
-                $result .= "<td class='tdLoss'>".$row['win_loss']."</td>";
+            if ($row['win_loss'] == "W")
+                $result .= "<img src='images/green.png' class='imgClass'>";
+                else if ($row['win_loss'] == "L")
+                    $result .= "<img src='images/red.jpg' class='imgClass'>";
+                else
+                    $result .= "<img src='images/black.png' class='imgClass'>";
         }
-        $result .= "</tr></table>";
+        $result .= "";
         return $result;
    }
    function getMatchInfo(){
@@ -212,16 +214,16 @@
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script src="clock/flipclock.js"></script>
       <style>
-         .tdWin {
-         font-size: medium;
-         font-weight: bolder;
-         color: green;
-         }
-         .tdLoss {
-         font-size: medium;
-         font-weight: bolder;
-         color: red;
-         }
+         .imgClass {
+        	width: 10px;
+        	height: 10px;
+        }
+        @media screen and (max-width:760px){
+                .imgClass {
+                	width: 8px;
+                	height: 8px;
+                }                    
+            }
       </style>
       <style>
          #view-source {
