@@ -5,7 +5,77 @@
    }
    include("php/config.php");
    $db=mysqli_select_db($con,DB_NAME) or die("Failed to connect to MySQL: " . mysql_error());
-   
+
+  function updateMatchResults(){
+    $match = "SELECT match_id,match_name FROM match_master where match_datetime<convert_tz(now(),@@session.time_zone,'+05:30') and match_status<>'COMPLETED'";
+    $result = mysqli_query($GLOBALS['con'],$match);
+    //echo "<script type=\"text/javascript\" src=\"scripts/matchapicall.js\"></script>";
+    while ($rec =  mysqli_fetch_array($result, MYSQLI_ASSOC)){
+      //call api for each match
+      echo "<script type=\"text/javascript\">
+                var response;
+                window.onload = setupRefresh;
+                var interval = null;
+
+                function onScoring(json){
+                  console.log(json);
+                  
+                  $.ajax({
+                    url: \"php/updateMatchResult.php\",
+                    type: \"POST\",
+                    data: 'json='+encodeURIComponent(JSON.stringify(json)),
+                         success: function(data) {
+                          console.log(data);
+                          response = data;
+                          
+                          if (response == \"Match complete\"){
+                            clearInterval(interval);
+                            $(\"#liveScore\").html(\"No matches currently in progress\");
+                            location.reload();
+                          }
+                          else{
+                            $(\"#liveScore\").html(response);
+                          }
+                         },
+                         error: function(err) {
+                          console.log(err);
+                         }
+                  });
+                  
+                  return response;
+                }
+                function getJSON(matchname) {
+                  $.ajax({
+                    url: \"https://datacdn.iplt20.com/dynamic/data/core/cricket/2012/ipl2018/\"+matchname+\"/scoring.js\",
+                    dataType: \"jsonp\"
+                  });
+                  return response;
+                };
+
+                function setupRefresh(){
+                  getLiveScore();
+                  interval = setInterval(\"getLiveScore();\",10000);
+                }
+                function getLiveScore(){
+                  var ret = getJSON('".$rec['match_name']."');
+                  console.log(\"ret\"+ret);
+                  if (ret == \"Match complete\"){
+                    clearInterval(interval);
+                  }
+                  
+                }
+            </script>";
+    }
+    if (mysqli_num_rows($result)==0){
+      echo "<script type=\"text/javascript\">
+              $(function (){ $(\"#liveScore\").html(\"No matches currently in progress\"); });
+              function getLiveScore(){
+                location.reload();
+              }
+            </script>";
+    }
+  }
+
    function getFirstName(){
            $sql = "SELECT FirstName FROM user_data where username='"
            .$_SESSION['username']
@@ -97,15 +167,15 @@
      while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
        $i++;
                    //$result .= "<p>" .$i .". " .$row['firstname'] ." - " .$row['lastname'] ." points</p>";
-       $result .= "<li class=\"mdl-list__item\">
+       $result .= "<li class=\"mdl-list__item mdl-list__item--two-line\">
        <span class=\"mdl-list__item-primary-content\">
-       <i class=\"material-icons mdl-list__item-icon\">grade</i>"
+       <i class=\"material-icons mdl-list__item-icon\">grade</i><span>"
        .$row['team1'] ." vs " .$row['team2']
-       ."</br>".$row['result_desc'] ."</span>
+       ."</span><span class=\"mdl-list__item-sub-title\">".$row['result_desc'] ."</span></span>
        </li>";
      } 
      if ($i == 0){
-       $result .= "<p>No rankings yet.</p>";
+       $result .= "<p>No results yet.</p>";
      }
      return $result;
    }
@@ -153,6 +223,10 @@
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
       <link rel="stylesheet" href="css/material.cyan-light_blue.min.css">
       <link rel="stylesheet" href="css/styles.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script type="text/javascript" src="scripts/matchapicall.js"></script>
+      <?php echo updateMatchResults(); ?>
+      <!--?php echo getLiveScore(); ?-->
       <style>
          #view-source {
          position: fixed;
@@ -164,6 +238,9 @@
          z-index: 900;
          }
       </style>
+      <script type="text/javascript">
+
+      </script>
    </head>
    <body>
       <!--?php include_once("php/analyticsstart.php") ?-->
@@ -187,8 +264,10 @@
                      Have you got what it takes to be the best of the best? Start voting now!
                      <div>
                         <h3><b>Rules:</b></h3>
-                        1. Each correct guess will earn you 1 point.
+                        1. For each correct guess, points equivalent to 1 point per losing player divided by number of winning players will be awarded to each winner.
                         <br>2. Each incorrect guess will cost you 1 point.
+						<br>3. In case a match results in a draw, no points will be rewarded or deducted.
+						<br>4. In case of no votes for any of the team, either winning or losing, no points will be deducted or rewarded.
                      </div>
                   </div>
                   <div class="mdl-layout-spacer"></div>
@@ -216,31 +295,33 @@
                </div>
                <div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing">
                   <div class="demo-updates2 mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--12-col-desktop">
-                     <div class="mdl-card__title mdl-color--yellow-800">
-                        <h2 class="mdl-card__title-text">Previous Match Winners</h2>
+                     <div class="mdl-card__title mdl-color--blue-700">
+                        <h2 class="mdl-card__title-text">Recent Results</h2>
                      </div>
                      <div class="mdl-card__supporting-text mdl-card--expand mdl-color-text--grey-600">
-                        <ul class="demo-list-icon mdl-list">
-                           <?php echo getPrevWinners(); ?>
+                        <ul class="demo-list-two mdl-list">
+                           <?php echo getRecentResults(); ?>
                         </ul>
                      </div>
                      <div class="mdl-card__actions mdl-card--border">
-                        <a href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect">See Full List</a>
+                        <a href="results_page.php" class="mdl-button mdl-js-button mdl-js-ripple-effect">See Full List</a>
                      </div>
                   </div>
                </div>
                <div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing">
                   <div class="demo-updates3 mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--12-col-desktop">
-                     <div class="mdl-card__title mdl-color--blue-700">
-                        <h2 class="mdl-card__title-text">Recent Results</h2>
+                     <div class="mdl-card__title mdl-color--yellow-800">
+                        <h2 class="mdl-card__title-text">Live Scorecard</h2>
                      </div>
                      <div class="mdl-card__supporting-text mdl-card--expand mdl-color-text--grey-600">
                         <ul class="demo-list-icon mdl-list">
-                           <?php echo getRecentResults(); ?>
+                           <li class="mdl-list__item">
+                           <div class="mdl-list__item-primary-content" name="liveScore" id="liveScore"></div>
+                           </li>
                         </ul>
                      </div>
                      <div class="mdl-card__actions mdl-card--border">
-                        <a href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect">See Full List</a>
+                        <a href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="getLiveScore();">Refresh Score</a>
                      </div>
                   </div>
                </div>
