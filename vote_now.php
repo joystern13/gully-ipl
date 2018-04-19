@@ -101,11 +101,11 @@
                   </div>
                   <div class=\"mdl-card__actions mdl-card--border\" style=\"text-align: center;\">
                      <a id=\"btn_".$row['match_id']."\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect\" onclick=\"vote(".$row['match_id'].");\">";
-                     if (is_null($row['voted_team'])) $result .= "Cast Your Vote"; else $result .= "Update Your Vote";
+                     if (is_null($row['voted_team'])) $result .= "Cast Vote"; else $result .= "Update Vote";
                      $result .= "</a><a id=\"del_".$row['match_id']."\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect\" onclick=\"del_vote(".$row['match_id'].");\"";
                      if (is_null($row['voted_team'])) $result .= " style=\"display: none;\"";
                      else $result .= "style=\"display:true\"";
-                      $result .= ">Delete Your Vote</a>";
+                      $result .= ">Delete Vote</a>";
                   $result .= "</div>";}
                   $result .= "<div class=\"mdl-layout-spacer\">
                   </div>
@@ -123,15 +123,15 @@
                       </a>
                       <div aria-labelledby=\"ep_".$row['match_id']."\" class=\"collapse\" data-parent=\"#accordionOne\" id=\"cp_".$row['match_id']."\" role=\"tabpanel\">
                         <div class=\"expansion-panel-body mdl-typography--body-1\" style=\"align: centre;\">
-                          <table align='center' cellpadding=\"0\" cellspacing=\"0\" style=\"width: 90%;\">
+                          <table align='center' cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\">
                           <tr>
-                          <td width=\"25%\" align='center' style=\"vertical-align:top;\">";
+                          <td width=\"35%\" align='center' style=\"vertical-align:top;\">";
                           while ($row1 = mysqli_fetch_array($player_query1, MYSQLI_ASSOC)){
                               $result .= $row1['player_name'] ."<br>";
                           }
                           $result .= "</td>
-                          <td width=\"50%\"></td>
-                          <td width=\"25%\" align='center' style=\"vertical-align:top;\">";
+                          <td width=\"30%\"></td>
+                          <td width=\"35%\" align='center' style=\"vertical-align:top;\">";
                           while ($row2 = mysqli_fetch_array($player_query2, MYSQLI_ASSOC)){
                               $result .= $row2['player_name'] ."<br>";
                           }
@@ -254,7 +254,7 @@
               'use strict';
               var msg = {message: data};
               if(String(data).indexOf("Please select the team")==-1){
-                $("#btn_"+rdbName).html("UPDATE YOUR VOTE");
+                $("#btn_"+rdbName).html("UPDATE VOTE");
                 document.getElementById("del_"+rdbName).style.display = "inline";
               }
               snackbarContainer.MaterialSnackbar.showSnackbar(msg);
@@ -279,7 +279,7 @@
              success: function(data) {
               //$("#message").html(data);
               $("input[name='"+rdbName+"']").prop("checked", false);
-              $("#btn_"+rdbName).html("CAST YOUR VOTE");
+              $("#btn_"+rdbName).html("CAST VOTE");
               document.getElementById("del_"+rdbName).style.display = "none";
               'use strict';
               var msg = {message: data};
@@ -313,7 +313,7 @@
                   <div class="mdl-card__supporting-text mdl-card--expand mdl-color-text--grey-800">
                      <h2 class="mdl-card__title-text" style=""><b>Hi <?php echo getFirstName(); ?>! Welcome to Gully IPL</b></h2>
                   </div>
-                  <div class="mdl-card__supporting-text" id="message">Start voting now!</br>Click on the team that you bet to win the match and click the 'CAST YOUR VOTE' button.</br>Your vote can be updated any number of times until 1 hour before the match starts using 'UPDATE YOUR VOTE' button.</div>
+                  <div class="mdl-card__supporting-text" id="message">Start voting now!</br>Click on the team that you bet to win the match and click the 'CAST VOTE' button.</br>Your vote can be updated any number of times until 1 hour before the match starts using 'UPDATE VOTE' button.</div>
                   
                </div>
                <?php echo getMatchInfo(); ?>
