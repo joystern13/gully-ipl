@@ -54,7 +54,7 @@
 
                 function setupRefresh(){
                   getLiveScore();
-                  interval = setInterval(\"getLiveScore();\",10000);
+                  interval = setInterval(\"getLiveScore();\",30000);
                 }
                 function getLiveScore(){
                   var ret = getJSON('".$rec['match_name']."');
