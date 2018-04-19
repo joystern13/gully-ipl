@@ -27,7 +27,7 @@ function getFirstName(){
         return $row['FirstName'];
 }
 function getMatchInfo(){
-    $sql = "select a.match_id,t1.team_id t1_id,t1.team_name t1_name,t1.logo_path t1_logo_path,t2.team_id t2_id,t2.team_name t2_name,t2.logo_path t2_logo_path,a.winner_team_id winning_team,t1.team_code t1_code,t2.team_code t2_code
+    $sql = "select a.match_id,t1.team_id t1_id,t1.team_name t1_name,t1.logo_path t1_logo_path,t2.team_id t2_id,t2.team_name t2_name,t2.logo_path t2_logo_path,a.winner_team_id winning_team,t1.team_code t1_code,t2.team_code t2_code, COALESCE(a.points,0.00) points
               from match_master a, (select * from team_master b) t1, (select * from team_master b) t2
               where a.team1_id = t1.team_id
               and a.team2_id = t2.team_id
@@ -41,7 +41,10 @@ function getMatchInfo(){
         $vote_query2=mysqli_query($GLOBALS['con'],"select c.firstname, c.lastname from user_vote_master a, team_master b, user_data c where matchid=".$row['match_id']." and a.teamid=b.team_id and a.teamid=".$row['t2_id']." and a.username=c.username order by firstname, lastname");
         
         $i++;
-        $result .= "<div class=\"demo-cards mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col\">
+        $result .= "<div class=\"demo-cards mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col\" style=\"text-align: right;\">
+                    <span class=\"mdl-chip\">
+                        <span class=\"mdl-chip__text\">Points per winner: ".$row['points']."</span>
+                    </span>
                   <div class=\"cc-selector\" style=\"text-align: center; margin: auto;\">
                      <div>
                      <table style=\"text-align: center; margin: auto;\">
@@ -178,9 +181,11 @@ function getMatchDetails($match_id){
       <link rel="stylesheet" href="css/bootstrap.min.css">
       <link rel="stylesheet" href="css/radio_css.css"/>
       <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.cyan-light_blue.min.css"/>
+      <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css"/>
       <link rel="stylesheet" href="css/styles.css"/>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
       <?php echo updateMatchResults(); ?>
       <style>
          #view-source {

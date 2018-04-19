@@ -17,14 +17,6 @@ DECLARE losingCount int;
     
     SET SQL_SAFE_UPDATES=0;
     
-    UPDATE match_master 
-    SET 
-        winner_team_id = teamId_,
-        match_status = 'COMPLETED',
-        result_desc = description
-    WHERE
-        match_id = matchId_;
-    
     SELECT 
         COUNT(1)
     INTO losingCount FROM
@@ -47,6 +39,14 @@ DECLARE losingCount int;
         set losingPoints = -1;
     end if;
     
+    UPDATE match_master 
+    SET 
+        winner_team_id = teamId_,
+        match_status = 'COMPLETED',
+        result_desc = description,
+        points = winningPoints
+    WHERE
+        match_id = matchId_;
     
     UPDATE user_vote_master 
     SET 
