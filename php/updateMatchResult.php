@@ -18,13 +18,13 @@
     } elseif ($json->{'matchInfo'}->{'matchState'} == "L") {
     	//$sql = "UPDATE match_master SET match_status='IN PROGRESS' where match_id=".$json->{'matchId'}->{'id'};
     	if (isset($json->{'matchInfo'}->{'teams'}) && isset($json->{'matchInfo'}->{'teams'}[0]) && isset($json->{'innings'}[0])){
-	    	echo $json->{'matchInfo'}->{'teams'}[0]->{'team'}->{'abbreviation'}." - ".$json->{'innings'}[0]->{'scorecard'}->{'runs'}."/".$json->{'innings'}[0]->{'scorecard'}->{'wkts'}." (".$json->{'innings'}[0]->{'overProgress'}."ov)<br><br>";
+	    	echo $json->{'matchInfo'}->{'teams'}[0]->{'team'}->{'abbreviation'}." - ".$json->{'innings'}[0]->{'scorecard'}->{'runs'}."/".$json->{'innings'}[0]->{'scorecard'}->{'wkts'}." (".$json->{'innings'}[0]->{'overProgress'}." ov)<br><br>";
 	    }
 	    elseif(isset($json->{'matchInfo'}->{'teams'}) && isset($json->{'matchInfo'}->{'teams'}[0])){
 	    	echo $json->{'matchInfo'}->{'teams'}[0]->{'team'}->{'abbreviation'}." - 0/0 (0.0 ov)<br><br>";
 	    }
 	    if (isset($json->{'matchInfo'}->{'teams'}) && isset($json->{'matchInfo'}->{'teams'}[1]) && isset($json->{'innings'}[1])){
-	    	echo $json->{'matchInfo'}->{'teams'}[1]->{'team'}->{'abbreviation'}." - ".$json->{'innings'}[1]->{'scorecard'}->{'runs'}."/".$json->{'innings'}[1]->{'scorecard'}->{'wkts'}." (".$json->{'innings'}[0]->{'overProgress'}."ov)<br><br><br>";
+	    	echo $json->{'matchInfo'}->{'teams'}[1]->{'team'}->{'abbreviation'}." - ".$json->{'innings'}[1]->{'scorecard'}->{'runs'}."/".$json->{'innings'}[1]->{'scorecard'}->{'wkts'}." (".$json->{'innings'}[1]->{'overProgress'}." ov)<br><br><br>";
 	    }
 	    echo str_replace(", who"," won the toss and ",$json->{'matchInfo'}->{'additionalInfo'}->{'toss.elected'});
 
