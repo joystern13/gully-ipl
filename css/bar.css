@@ -1,0 +1,71 @@
+
+.bodyDiv {
+    font-family: Arial;
+    margin: 0 auto; /* Center website */
+    padding: 20px;
+}
+
+
+/* Three column layout */
+.side {
+    float: left;
+    width: 15%;
+    margin-top: 10px;
+}
+
+.middle {
+    float: left;
+    width: 70%;
+    margin-top: 10px;
+}
+.middleBottom {
+    float: left;
+    width: 70%;
+    margin-top: 1px;
+}
+
+/* Place text to the right */
+.right {
+    text-align: right;
+}
+
+/* Place text to the left */
+.left {
+    text-align: left;
+}
+
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* The bar container */
+.bar-container {
+    width: 100%;
+    background-color: #f1f1f1;
+    text-align: center;
+    color: white;
+}
+
+.imgClass {
+	width: 7px;
+	height: 7px;
+}
+
+/* Responsive layout - make the columns stack on top of each other instead of next to each other */
+@media (max-width: 400px) {
+    .side, .middle, .right {
+        width: 100%;
+    }
+    .imgClass {
+		width: 3px;
+		height: 3px;
+	}
+    /* Hide the right column on small screens */
+    /* .right {
+        display: none;
+    } */
+}

@@ -16,6 +16,7 @@
    <a class="mdl-navigation__link" href="homepage.php"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Home</a>
    <a class="mdl-navigation__link" href="vote_now.php"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">touch_app</i>Vote Now</a>
    <a class="mdl-navigation__link" href="rankings.php"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">star_border</i>Rankings</a>
+   <a class="mdl-navigation__link" href="winpercent.php"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">star_border</i>Winning Stats</a>
    <a class="mdl-navigation__link" href="results_page.php"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">assignment_turned_in</i>Match Results</a>
    <a class="mdl-navigation__link" href="vote_stats.php"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">move_to_inbox</i>Voting Stats</a>
    <div class="mdl-layout-spacer"></div>
