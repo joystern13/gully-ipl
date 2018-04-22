@@ -10,23 +10,30 @@ function getLeaderBoards()
 {
     $i = 0;
     $result = "";
+    $me = $_SESSION['username'];
     $query = mysqli_query($GLOBALS['con'], "select a.FirstName,a.LastName, sum(COALESCE(b.Points,0)) Points, a.username username from user_data a, user_vote_master b where a.username = b.username and b.points is not null group by a.username order by sum(COALESCE(b.Points,0)) desc, a.Firstname asc, a.LastName asc");
     $result = "<table cellspacing=6><thead><th align='left'>Rank</th><th align='left'>Player</th><th align='left'>Points</th><th align='left'>Last 10 matches</th></thead>";
     while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)) {
         $i ++;
-        // $result .= "<p>" .$i .". " .$row['FirstName'] ." - " .$row['Points'] ." points</p>";
-        /*
-         * $result .= "<li class=\"mdl-list__item\">
-         * <span class=\"mdl-list__item-primary-content\">" . $i . ". " . $row['FirstName'] . " " . $row['LastName'] . " (" . $row['Points'] . " points) &nbsp;&nbsp;&nbsp;" . getWinLoss($row['username']) . "
-         * </span>
-         * </li>";
-         */
-        $result .= "<tr class=\"mdl-list__item-primary-content\">
+        
+        if($me == $row['username'])
+        {
+            $result .= "<tr class=\"mdl-list__item-primary-content\">
+                        <td class='voterFont' align='right'><b><i><u>" . $i . ".</u></i></b></td>
+                        <td class='voterFont'><b><i><u>Me</u></i></b></td>
+                        <td class='voterFont' align='right'><b><i><u>" . $row['Points'] . "</u></i></b></td>
+                        <td>" . getWinLoss($row['username']) . "</td>
+                    </tr>";
+        }
+        else 
+        {
+            $result .= "<tr class=\"mdl-list__item-primary-content\">
                         <td class='voterFont' align='right'>" . $i . ".</td>
                         <td class='voterFont'>" . $row['FirstName'] . " " . substr($row['LastName'], 0, 1) . "</td>
                         <td class='voterFont' align='right'>" . $row['Points'] . "</td>
                         <td>" . getWinLoss($row['username']) . "</td>
                     </tr>";
+        }
     }
     $result .= "</table>";
     if ($i == 0) {
