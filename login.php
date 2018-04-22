@@ -54,6 +54,10 @@ session_start();
 	                    }
 					}
 					$_SESSION['last_page'] = "login";
+					if (isset($_SESSION['msg']) && $_SESSION['msg'] == true) {
+					    echo "<div class=\"success-msg\" id=\"\">".$_SESSION['msg']."</div>";
+					    unset($_SESSION['msg']);
+					}
 				?>
 				<form method="POST" action="php/validate_entry.php" onsubmit="validateMyForm();">
 				<input id="username" name="username" placeholder="Username" type="text" value="" spellcheck="false" onchange="remove_error();">
