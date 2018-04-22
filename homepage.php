@@ -30,7 +30,7 @@
                           
                           if (response == \"Match complete\"){
                             clearInterval(interval);
-                            $(\"#liveScore\").html(\"No matches currently in progress\");
+                            $(\"#liveScore\").html(\"<span style='padding-left: 15px;'/><b>No matches currently in progress</b>\");
                             location.reload();
                           }
                           else{
@@ -68,7 +68,7 @@
     }
     if (mysqli_num_rows($result)==0){
       echo "<script type=\"text/javascript\">
-              $(function (){ $(\"#liveScore\").html(\"No matches currently in progress\"); });
+              $(function (){ $(\"#liveScore\").html(\"<span style='padding-left: 15px;'/><b>No matches currently in progress</b>\"); });
               function getLiveScore(){
                 location.reload();
               }
