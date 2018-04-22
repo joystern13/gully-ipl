@@ -32,8 +32,16 @@
                 $fName = ucwords(strtolower($_POST['firstname']));
                 $lName = ucwords(strtolower($_POST['lastname']));
                 
-                $sql = "insert into user_data (username,password,firstname,lastname,email,gender) values ('$_POST[username]','$_POST[password]','".$fName."','".$lName."','$_POST[email]','$_POST[Gender]')";
-				if (mysqli_query($GLOBALS['con'],$sql)) {
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+                $email = $_POST['email'];
+                $gender = $_POST['Gender'];
+                
+                $stmt = $GLOBALS['con']->prepare("insert into user_data (username,password,firstname,lastname,email,gender) VALUES (?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("ssssss", $username,$password,$fName,$lName,$email,$gender);
+                $i = $stmt->execute();
+				if ($i > 0) {
+				    $_SESSION['msg'] = "You have successfully registered.</br>Please login to continue.";
                                     header ("Location: ../login.php");
 				    				exit();
                                 } else {

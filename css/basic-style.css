@@ -110,6 +110,14 @@ input[type=email],
   line-height: 17px;
   }
   
+  .success-msg {
+  margin: .8em 0;
+  font-size: 12px;
+  display: block;
+  color: green;
+  line-height: 17px;
+  }
+  
   input[type=checkbox].form-error, input[type=email].form-error, input[type=number].form-error, input[type=password].form-error, input[type=text].form-error, input[type=tel].form-error, input[type=url].form-error {
     border: 1px solid #dd4b39;
 }
