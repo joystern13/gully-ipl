@@ -1,21 +1,21 @@
 <?php
- session_start();
+session_start();
 if (!(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true)) {
     header ("Location: login.php");
 }
 include("php/config.php");
 $db=mysqli_select_db($con,DB_NAME) or die("Failed to connect to MySQL: " . mysql_error());
- 
+
 function getBarChart()
 {
-    $sql = " SELECT 
+    $sql = " SELECT
                 username,
                 FirstName,
                 LastName,
                 COALESCE(ROUND((winVotes / totalVotes) * 100, 2),0) winPer
             FROM
-                (SELECT 
-                    (SELECT 
+                (SELECT
+                    (SELECT
                                 COUNT(c.matchid)
                             FROM
                                 user_vote_master c, match_master b
@@ -24,7 +24,7 @@ function getBarChart()
                                     AND match_status = 'COMPLETED'
                                     AND c.username = u.username
                             GROUP BY c.username) totalVotes,
-                        (SELECT 
+                        (SELECT
                                 COUNT(c.matchid)
                             FROM
                                 user_vote_master c, match_master b
@@ -41,12 +41,11 @@ function getBarChart()
                     user_data u
                 WHERE
                     active = 1) main
-            ORDER BY winPer desc ";
+            ORDER BY winPer desc, username asc ";
     
     $query = mysqli_query($GLOBALS['con'],$sql);
     $result = "";
-    $totalVotes = 0;
-    $correctVotes = 0;
+    $i = 1;
     $winPercentage = 0;
     $name = "";
     
@@ -56,15 +55,16 @@ function getBarChart()
         $username = $row['username'];
         
         $result .= "<div class='bodyDiv'>
-                    <div class='side right'><div>".$name."&nbsp;</div></div>
+                    <div class='side right'><div>".$i++.". ".$name."&nbsp;</div></div>
             		<div class='middle'><div class='bar-container'><div style='width: ".$winPercentage."%; height: 18px; background-color: #2196F3;'></div></div></div>
             		<div class='side left'><div>&nbsp;".$winPercentage."%</div></div>
                     </div>";
         $result .= "<div class='bodyDiv'>
-                    <div class='side right'><div>&nbsp;</div></div>
+                    <div class='sideBottom'><div>&nbsp;</div></div>
             		<div class='middleBottom'>".getWinLoss($username)."</div>
-            		<div class='side right'><div>&nbsp;</div></div>
+            		<div class='sideBottom'><div>&nbsp;</div></div>
                     </div>";
+        
     }
     
     return $result;

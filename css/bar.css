@@ -7,10 +7,16 @@
 
 
 /* Three column layout */
-.side {
+.side{
     float: left;
     width: 15%;
     margin-top: 10px;
+}
+.sideBottom {
+    float: left;
+    width: 15%;
+    margin-top: 1px;
+	border-bottom: 1px solid rgba(0,0,0,.1);
 }
 
 .middle {
@@ -22,6 +28,7 @@
     float: left;
     width: 70%;
     margin-top: 1px;
+    border-bottom: 1px solid rgba(0,0,0,.1);
 }
 
 /* Place text to the right */
@@ -57,23 +64,27 @@
 
 /* Responsive layout - make the columns stack on top of each other instead of next to each other */
 @media (max-width: 400px) {
-    .side, .middle {
+    .side{
         width: 100%;
     }
-    .right {
+    .middle {
         width: 100%;
+    }
+    .middleBottom {
+        width: 100%;
+        border-bottom: 1px solid rgba(0,0,0,.1);
+    }
+    .right {
         text-align: left;
     }
     .left {
-        width: 100%;
         text-align: right;
     }
     .imgClass {
 		width: 3px;
-		height: 3px;
+		height: 6px;
 	}
-    /* Hide the right column on small screens */
-    /* .right {
+    .sideBottom {
         display: none;
-    } */
+    }
 }
