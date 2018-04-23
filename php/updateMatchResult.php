@@ -95,18 +95,22 @@
     	if (!isset($json->{'innings'}[1]->{'rodl'})){
     		$rem_balls = 120 - (intdiv(intval($json->{'innings'}[1]->{'overProgress'})*6, 1) + (fmod($json->{'innings'}[1]->{'overProgress'},1)*10));
     		$req_runs = intval($json->{'innings'}[0]->{'scorecard'}->{'runs'})-intval($json->{'innings'}[1]->{'scorecard'}->{'runs'})+1;
-    		if($req_runs<=0){
-    			$req_runs = 0;
-    			$rrr = "0.0";
-    		}
-    		else{
-    			$rrr = $json->{'currentState'}->{'requiredRunRate'};
-    		}
-    		return "<span style='padding-left: 15px;'/><b>Need $req_runs runs in $rem_balls balls at $rrr RPO</b><br>";
+    		
     	}
     	else{
     		$rem_balls = intval($json->{'innings'}[1]->{'rodl'}->{'overs'})*6 - (intdiv(intval($json->{'innings'}[1]->{'overProgress'})*6, 1) + (fmod($json->{'innings'}[1]->{'overProgress'},1)*10));
-    		return "<span style='padding-left: 15px;'/><b>Need ".strval(intval($json->{'innings'}[1]->{'rodl'}->{'target'})-intval($json->{'innings'}[1]->{'scorecard'}->{'runs'})+1)." runs in $rem_balls balls</b><br>";
+    		$req_runs = strval(intval($json->{'innings'}[1]->{'rodl'}->{'target'})-intval($json->{'innings'}[1]->{'scorecard'}->{'runs'})+1);
     	}
+
+    	if($req_runs<=0){
+			return "<span style='padding-left: 15px;'/><b>".$json->{'matchInfo'}->{'teams'}[$json->{'matchInfo'}->{'battingOrder'}[1]]->{'team'}->{'fullName'}." won by ".strval(10-intval($json->{'innings'}[1]->{'scorecard'}->{'wkts'}))." wickets</b><br>";
+		}
+		elseif ($rem_balls == 0 && $req_runs>0) {
+			return "<span style='padding-left: 15px;'/><b>".$json->{'matchInfo'}->{'teams'}[$json->{'matchInfo'}->{'battingOrder'}[0]]->{'team'}->{'fullName'}." won by ".strval($req_runs -1)." runs</b><br>";
+		}
+		else{
+			$rrr = $json->{'currentState'}->{'requiredRunRate'};
+			return "<span style='padding-left: 15px;'/><b>Need $req_runs runs in $rem_balls balls at $rrr RPO</b><br>";
+		}
     }
 ?>
