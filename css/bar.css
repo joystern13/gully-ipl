@@ -332,8 +332,17 @@
   white-space: nowrap;
 }
 
+.imgClass {
+	width: 7px;
+	height: 7px;
+}
+
 @media screen and (max-width:760px){
   font-size:10px;
+  .imgClass {
+		width: 3px;
+		height: 6px;
+	}
 }
 
 @keyframes anim-lightspeed-in {
