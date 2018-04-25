@@ -135,7 +135,6 @@
          href="https://fonts.googleapis.com/icon?family=Material+Icons">
       <link rel="stylesheet" href="css/material.cyan-light_blue.min.css">
       <link rel="stylesheet" href="css/styles.css">
-      <link rel="stylesheet" href="css/bar2.css" />
       <link rel="stylesheet" href="css/bar.css" />
    </head>
    <body>
