@@ -60,9 +60,9 @@ session_start();
 					}
 				?>
 				<form method="POST" action="php/validate_entry.php" onsubmit="validateMyForm();">
-				<input id="username" name="username" placeholder="Username" type="text" value="" spellcheck="false" onchange="remove_error();">
+				<input id="username" name="username" placeholder="Username" type="text" value="" spellcheck="false" onchange="remove_error();" maxlength="20">
 				<span role="alert" class="error-msg" name="errormsg_0_username" id="errormsg_0_username"></span>
-				<input id="password" name="password" placeholder="Password" type="password" value="" spellcheck="false" onchange="remove_error();">
+				<input id="password" name="password" placeholder="Password" type="password" value="" spellcheck="false" onchange="remove_error();" maxlength="20">
 				<span role="alert" class="error-msg" name="errormsg_0_password" id="errormsg_0_password"></span>
 				<input id="Login" name="signIn" class="button button-submit" type="submit" value="Login">
 				<span style="display:block; height: 25px;"></span>

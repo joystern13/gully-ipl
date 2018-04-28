@@ -56,12 +56,12 @@
 				<strong>Name</Strong>
 					<table align="center" width="100%" cellpadding="0" cellspacing="0" border="0"> 
 						<tr>
-							<td style="width:49%; padding-right:2%;"> <input id="firstname" maxlength="60" name="firstname" placeholder="First Name" type="text" value="" spellcheck="false"> </td>
-							<td style="width:49%;"> <input id="lastname" name="lastname" maxlength="60" placeholder="Last Name" type="text" value="" spellcheck="false"> </td>
+							<td style="width:49%; padding-right:2%;"> <input id="firstname" maxlength="20" name="firstname" placeholder="First Name" type="text" value="" spellcheck="false"> </td>
+							<td style="width:49%;"> <input id="lastname" name="lastname" maxlength="20" placeholder="Last Name" type="text" value="" spellcheck="false"> </td>
 						</tr>
 					</table>
 				<strong>E-mail</Strong>
-				<input id="email" name="email" maxlength="100" placeholder="E-mail address" type="email" value="" spellcheck="false">
+				<input id="email" name="email" maxlength="40" placeholder="E-mail address" type="email" value="" spellcheck="false">
 				<!--input id="dob" name="dob" placeholder="Date of Birth" type="date" value=""-->
 					<!--
 <div>
@@ -103,7 +103,7 @@
 					</div>
 				</label>
 				<strong>Username</Strong>
-				<input id="username" name="username" maxlength="50" placeholder="Username" type="text" value="" spellcheck="false">
+				<input id="username" name="username" maxlength="20" placeholder="Username" type="text" value="" spellcheck="false">
 				<strong>Password</Strong>
 				<input id="password" name="password" maxlength="20" placeholder="Password" type="password" value="" spellcheck="false">
 				<span style="display:block; height: 15px;"></span>
