@@ -266,8 +266,8 @@
                         <h3><b>Rules:</b></h3>
                         1. For each correct guess, points equivalent to 1 point per losing player divided by number of winning players will be awarded to each winner.
                         <br>2. Each incorrect guess will cost you 1 point.
-						<br>3. In case a match results in a draw, no points will be rewarded or deducted.
-						<br>4. In case of no votes for any of the team, either winning or losing, no points will be deducted or rewarded.
+						            <br>3. In case a match results in a draw, no points will be rewarded or deducted.
+						            <br>4. In case of no votes for any of the team, either winning or losing, no points will be deducted or rewarded.
                      </div>
                   </div>
                   <div class="mdl-layout-spacer"></div>
@@ -277,7 +277,7 @@
                      </a>
                   </div>
                </div>
-               <div class="mdl-grid">
+               <!--div class="mdl-grid"-->
                <div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing">
                   <div class="demo-updates1 mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--12-col-desktop">
                      <div class="mdl-card__title mdl-color--green-900">
@@ -294,6 +294,20 @@
                   </div>
                </div>
                <div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing">
+                  <div class="demo-updates3 mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--12-col-desktop">
+                     <div class="mdl-card__title mdl-color--yellow-800">
+                        <h2 class="mdl-card__title-text">Live Scorecard</h2>
+                     </div>
+                     <div class="mdl-card__supporting-text mdl-card--expand mdl-color-text--grey-600">
+                           <br/><br/>
+                           <div class="mdl-list__item-primary-content" name="liveScore" id="liveScore"></div>
+                     </div>
+                     <div class="mdl-card__actions mdl-card--border">
+                        <a href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="getLiveScore();">Refresh Score</a>
+                     </div>
+                  </div>
+               </div>
+               <div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing">
                   <div class="demo-updates2 mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--12-col-desktop">
                      <div class="mdl-card__title mdl-color--blue-700">
                         <h2 class="mdl-card__title-text">Recent Results</h2>
@@ -305,21 +319,6 @@
                      </div>
                      <div class="mdl-card__actions mdl-card--border">
                         <a href="results_page.php" class="mdl-button mdl-js-button mdl-js-ripple-effect">See Full List</a>
-                     </div>
-                  </div>
-               </div>
-               <div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing">
-                  <div class="demo-updates3 mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--12-col-desktop">
-                     <div class="mdl-card__title mdl-color--yellow-800">
-                        <h2 class="mdl-card__title-text">Live Scorecard</h2>
-                     </div>
-                     <div class="mdl-card__supporting-text mdl-card--expand mdl-color-text--grey-600">
-                           <br/><br/>
-                           <div class="mdl-list__item-primary-content" name="liveScore" id="liveScore"></div>
-                           
-                     </div>
-                     <div class="mdl-card__actions mdl-card--border">
-                        <a href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="getLiveScore();">Refresh Score</a>
                      </div>
                   </div>
                </div>
