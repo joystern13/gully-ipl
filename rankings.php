@@ -16,7 +16,7 @@ function getLeaderBoards()
     while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)) {
         $i ++;
         
-        if($me == $row['username'])
+        if(strtoupper($me) == strtoupper($row['username']))
         {
             $result .= "<tr class=\"mdl-list__item-primary-content\">
                         <td class='voterFont' align='right'><b><i><u>" . $i . ".</u></i></b></td>
