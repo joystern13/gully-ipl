@@ -19,5 +19,6 @@
    <a class="mdl-navigation__link" href="winpercent.php"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">equalizer</i>Winning Stats</a>
    <a class="mdl-navigation__link" href="results_page.php"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">assignment_turned_in</i>Match Results</a>
    <a class="mdl-navigation__link" href="vote_stats.php"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">move_to_inbox</i>Voting Stats</a>
+   <a class="mdl-navigation__link" href="points_history.php"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">history</i>Points History</a>
    <div class="mdl-layout-spacer"></div>
 </nav>
