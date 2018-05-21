@@ -1,6 +1,6 @@
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateMatchResult`(matchId_ INT,teamId_ INT,description varchar(500))
 BEGIN
-DECLARE losingCount int;
+	DECLARE losingCount int;
     DECLARE winningCount int;
     DECLARE winningPoints double;
     DECLARE losingPoints double;
@@ -8,7 +8,7 @@ DECLARE losingCount int;
     DECLARE msg TEXT;
     DECLARE rows INT;
     DECLARE result TEXT;
-    DECLARE multiplier INT; --extra points for qualifiers and final
+    DECLARE multiplier INT; #extra points for qualifiers and final
     
     DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -26,11 +26,11 @@ DECLARE losingCount int;
         matchid = matchId_ AND teamid <> teamId_;
 
     IF matchId_ < 7950 THEN
-        multiplier = 1;
-    ELSE IF matchId_ = 7593
-        multiplier = 4;
+        set multiplier = 1;
+    ELSEIF matchId_ = 7593 then
+        set multiplier = 4;
     ELSE
-        multiplier = 2;
+        set multiplier = 2;
     END IF;
 
     SELECT 
